@@ -25,7 +25,7 @@
             "hidden": true,
             "inherits": "cmake-pedantic",
             "cacheVariables": {
-                "my_project_DEVELOPER_MODE": "ON"
+                "pasio_DEVELOPER_MODE": "ON"
             }
         },
         {
@@ -66,6 +66,7 @@
         {
             "name": "conan",
             "hidden": true,
+            "toolchainFile": "${sourceDir}/conan/Windows/conan_toolchain.cmake",
             "cacheVariables": {
                 "CMAKE_POLICY_DEFAULT_CMP0091": "NEW"
             }
@@ -74,56 +75,56 @@
             "name": "iwyu",
             "hidden": true,
             "cacheVariables": {
-                "my_project_ENABLE_IWYU": "ON"
+                "pasio_ENABLE_IWYU": "ON"
             }
         },
         {
             "name": "cppcheck",
             "hidden": true,
             "cacheVariables": {
-                "my_project_ENABLE_CPPCHECK": "ON"
+                "pasio_ENABLE_CPPCHECK": "ON"
             }
         },
         {
             "name": "clang-tidy",
             "hidden": true,
             "cacheVariables": {
-                "my_project_ENABLE_CLANGTIDY": "ON"
+                "pasio_ENABLE_CLANGTIDY": "ON"
             }
         },
         {
             "name": "sanitize-address",
             "hidden": true,
             "cacheVariables": {
-                "my_project_SANITIZER_ADDRESS": "ON"
+                "pasio_SANITIZER_ADDRESS": "ON"
             }
         },
         {
             "name": "sanitize-leak",
             "hidden": true,
             "cacheVariables": {
-                "my_project_SANITIZER_LEAK": "ON"
+                "pasio_SANITIZER_LEAK": "ON"
             }
         },
         {
             "name": "sanitize-ub",
             "hidden": true,
             "cacheVariables": {
-                "my_project_SANITIZER_UNDEFINED_BEHAVIOR": "ON"
+                "pasio_SANITIZER_UNDEFINED_BEHAVIOR": "ON"
             }
         },
         {
             "name": "sanitize-thread",
             "hidden": true,
             "cacheVariables": {
-                "my_project_SANITIZER_THREAD": "ON"
+                "pasio_SANITIZER_THREAD": "ON"
             }
         },
         {
             "name": "sanitize-memory",
             "hidden": true,
             "cacheVariables": {
-                "my_project_SANITIZER_MEMORY": "ON"
+                "pasio_SANITIZER_MEMORY": "ON"
             }
         },
         {
@@ -266,7 +267,7 @@
                 "rhs": "Linux"
             },
             "cacheVariables": {
-                "my_project_ENABLE_COVERAGE": "ON"
+                "pasio_ENABLE_COVERAGE": "ON"
             }
         },
         {

@@ -11,7 +11,7 @@ include(../../cmake/static-analyzers.cmake)
 # ---- Dependencies ----
 
 if(PROJECT_IS_TOP_LEVEL)
-    find_package(my_project REQUIRED)
+    find_package(pasio REQUIRED)
     enable_testing()
 endif()
 
@@ -47,14 +47,6 @@ catch_discover_tests(${PROJECT_NAME})
 if(${PARENT_PROJECT_NAME}_ENABLE_COVERAGE)
     add_coverage_lcov_target(${PROJECT_NAME})
     add_coverage_llvm_target(${PROJECT_NAME})
-endif()
-
-# ---- Add valgrind target
-
-option(${PROJECT_NAME}_VALGRIND "Add valgrind run target" ON)
-if(${PROJECT_NAME}_VALGRIND)
-    valgrind_target(${PROJECT_NAME})
-    memcheck_target(${PROJECT_NAME})
 endif()
 
 # ---- End-of-file commands ----

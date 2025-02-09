@@ -1,3 +1,5 @@
 # required project dependencies here
 
-find_package(fmt REQUIRED)
+find_package(Python REQUIRED COMPONENTS Interpreter Development)
+find_package(Boost CONFIG REQUIRED)
+find_package(Pybind11 CONFIG REQUIRED)

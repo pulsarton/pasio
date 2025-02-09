@@ -14,6 +14,20 @@
             }
         },
         {
+            "name": "pass-python",
+            "hidden": true,
+            "cacheVariables": {
+                "Python_EXECUTABLE": "C://Users//rusla//.pyenv//pyenv-win//versions//3.13.0//python.exe"
+            }
+        },
+        {
+            "name": "build-plugin",
+            "hidden": true,
+            "cacheVariables": {
+                "BUILD_SHARED_LIBS": "ON"
+            }
+        },
+        {
             "name": "dev-common",
             "hidden": true,
             "inherits": [
@@ -70,7 +84,9 @@
                 "dev-common",
                 "cppcheck",
                 "clang-tidy",
-                "ci-win64"
+                "ci-win64",
+                "pass-python",
+                "build-plugin"
             ],
             "environment": {
                 "UseMultiToolTask": "true",

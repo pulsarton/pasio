@@ -3,7 +3,7 @@
 {
 	"name": "cpp-cmake-conan",
 	"dockerComposeFile": "docker-compose.yml",
-	"service": "my_project",
+	"service": "pasio",
 	"customizations": {
 		"vscode": {
 			"extensions": [

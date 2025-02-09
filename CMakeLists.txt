@@ -10,10 +10,10 @@ include(cmake/vsenvironment.cmake)
 run_vcvarsall()
 
 include(cmake/cpm.cmake)
-include(cmake/conan_provider.cmake)
+# include(cmake/conan_provider.cmake)
 
 # cmake-format: off
-project(my_project
+project(pasio
         VERSION 0.1.0
         DESCRIPTION "Short description"
         HOMEPAGE_URL "https://example.com/"
@@ -73,7 +73,6 @@ target_sanitizers(
     SANITIZER_MEMORY
     ${${PROJECT_NAME}_SANITIZER_MEMORY})
 
-register_module(utility)
 register_module(core)
 
 # ---- Target to link with all library modules
@@ -84,14 +83,14 @@ target_link_libraries(${PROJECT_NAME} INTERFACE ${MODULES_REGISTRY})
 
 # ---- Install rules for project interface library
 
-include(cmake/install-rules.cmake)
+# include(cmake/install-rules.cmake)
 
 # ---- Developer mode ----
 
 if(NOT ${PROJECT_NAME}_DEVELOPER_MODE)
     return()
 elseif(NOT PROJECT_IS_TOP_LEVEL)
-    message(AUTHOR_WARNING "Developer mode is intended for developers of my_project")
+    message(AUTHOR_WARNING "Developer mode is intended for developers of pasio")
 endif()
 
 include(cmake/dev-mode.cmake)

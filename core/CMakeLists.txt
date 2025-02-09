@@ -15,7 +15,7 @@ project(
     LANGUAGES CXX)
 
 include(cmake/options.cmake)
-    
+
 # ---- Project options target
 
 add_library(${PROJECT_NAME}-options INTERFACE)
@@ -49,28 +49,24 @@ endif()
 
 # ---- Declare library ----
 
-if(${PROJECT_NAME}_BUILD_SHARED_LIBS)
-    add_library(${PROJECT_NAME} SHARED)
-else()
-    add_library(${PROJECT_NAME} STATIC)
-endif()
+pybind11_add_module(${PROJECT_NAME} src/core.cpp)
 add_library(${PARENT_PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 
 # ---- Generate export header
 
 generate_export_header(${PROJECT_NAME} EXPORT_FILE_NAME
-                       ${PROJECT_BINARY_DIR}/include/my_project/${PROJECT_NAME}/exports/exports.hpp)
+                       ${PROJECT_BINARY_DIR}/include/pasio/${PROJECT_NAME}/exports/exports.hpp)
 
 # ---- Collect sources
 
-file(GLOB LIBRARY_INCLUDES ${PROJECT_SOURCE_DIR}/include/my_project/${PROJECT_NAME}/*.hpp)
+file(GLOB LIBRARY_INCLUDES ${PROJECT_SOURCE_DIR}/include/pasio/${PROJECT_NAME}/*.hpp)
 file(GLOB LIBRARY_SOURCES ${PROJECT_SOURCE_DIR}/src/*.cpp)
 
 # ---- Set target sources
 
 target_sources(
     ${PROJECT_NAME}
-    PUBLIC FILE_SET 
+    PUBLIC FILE_SET
     ${PROJECT_NAME}_Headers TYPE HEADERS BASE_DIRS ${PROJECT_SOURCE_DIR}/include FILES ${LIBRARY_INCLUDES}
     PRIVATE ${LIBRARY_SOURCES})
 
@@ -85,7 +81,7 @@ target_include_directories(
 
 target_link_libraries(
     ${PROJECT_NAME}
-    PUBLIC fmt::fmt my_project::utility
+    PUBLIC Boost::headers pybind11::pybind11 Python::Python
     PRIVATE $<BUILD_INTERFACE:${PROJECT_NAME}-pch> $<BUILD_INTERFACE:${PROJECT_NAME}-options>)
 
 # ---- Configure linker
@@ -135,16 +131,16 @@ endif()
 
 # ---- Build tests
 
-include(CTest)
-if(BUILD_TESTING AND ${PROJECT_NAME}_BUILD_TESTING)
-    add_subdirectory(test)
-endif()
+# include(CTest)
+# if(BUILD_TESTING AND ${PROJECT_NAME}_BUILD_TESTING)
+#     add_subdirectory(test)
+# endif()
 
 # ---- Configure install rules
 
-if(NOT CMAKE_SKIP_INSTALL_RULES AND NOT ${PROJECT_NAME}_SKIP_INSTALL_RULES)
-    include(cmake/install-rules.cmake)
-endif()
+# if(NOT CMAKE_SKIP_INSTALL_RULES AND NOT ${PROJECT_NAME}_SKIP_INSTALL_RULES)
+#     include(cmake/install-rules.cmake)
+# endif()
 
 # ---- Project outline
 

@@ -27,7 +27,7 @@ mark_as_advanced(${package}_INSTALL_CMAKEDIR)
 configure_package_config_file(cmake/install-config.cmake.in ${package}Config.cmake
                               INSTALL_DESTINATION ${${package}_INSTALL_CMAKEDIR})
 
-install(DIRECTORY ${PROJECT_BINARY_DIR}/include/my_project DESTINATION include)
+install(DIRECTORY ${PROJECT_BINARY_DIR}/include/pasio DESTINATION include)
 
 install(FILES ${PROJECT_BINARY_DIR}/${package}Config.cmake ${PROJECT_BINARY_DIR}/${package}ConfigVersion.cmake
         DESTINATION ${${package}_INSTALL_CMAKEDIR})
