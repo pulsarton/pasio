@@ -1,0 +1,17 @@
+version: "3.9"
+
+services:
+  my_project:
+    container_name: my_project
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - VARIANT=noble
+        - GCC_VER=13
+        - LLVM_VER=19
+        - USE_CLANG=1
+    command: sleep infinity
+    volumes:
+      - ..:/home/workspaces/:cached
+

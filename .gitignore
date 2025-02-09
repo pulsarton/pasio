@@ -1,0 +1,51 @@
+**build/
+conan/
+install/
+
+cmake-build-*
+
+.mypy_cache
+.venv
+.python-version
+
+conan_test/build
+conan_test/CMakeUserPresets.json
+
+fetch_content_test/build
+
+.vs
+.idea
+.vscode/
+
+# Prerequisites
+*.d
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Fortran module files
+*.mod
+*.smod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app

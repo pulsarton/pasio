@@ -1,0 +1,562 @@
+{
+    "version": 6,
+    "cmakeMinimumRequired": {
+        "major": 3,
+        "minor": 28,
+        "patch": 0
+    },
+    "configurePresets": [
+        {
+            "name": "cmake-pedantic",
+            "hidden": true,
+            "warnings": {
+                "dev": true,
+                "deprecated": true,
+                "uninitialized": true,
+                "unusedCli": true,
+                "systemVars": false
+            },
+            "errors": {
+                "deprecated": true
+            }
+        },
+        {
+            "name": "dev-mode",
+            "hidden": true,
+            "inherits": "cmake-pedantic",
+            "cacheVariables": {
+                "my_project_DEVELOPER_MODE": "ON"
+            }
+        },
+        {
+            "name": "cpm-common",
+            "hidden": true,
+            "environment": {
+                "CPM_USE_LOCAL_PACKAGES": "ON",
+                "CPM_LOCAL_PACKAGES_ONLY": "OFF",
+                "CPM_USE_NAMED_CACHE_DIRECTORIES": "ON"
+            }
+        },
+        {
+            "name": "cpm-windows",
+            "hidden": true,
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Windows"
+            },
+            "inherits": "cpm-common",
+            "environment": {
+                "CPM_SOURCE_CACHE": "$env{USERPROFILE}\\.cache\\.cpm"
+            }
+        },
+        {
+            "name": "cpm-unix",
+            "hidden": true,
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Linux"
+            },
+            "inherits": "cpm-common",
+            "environment": {
+                "CPM_SOURCE_CACHE": "$env{HOME}\\.cache\\.cpm"
+            }
+        },
+        {
+            "name": "conan",
+            "hidden": true,
+            "cacheVariables": {
+                "CMAKE_POLICY_DEFAULT_CMP0091": "NEW"
+            }
+        },
+        {
+            "name": "iwyu",
+            "hidden": true,
+            "cacheVariables": {
+                "my_project_ENABLE_IWYU": "ON"
+            }
+        },
+        {
+            "name": "cppcheck",
+            "hidden": true,
+            "cacheVariables": {
+                "my_project_ENABLE_CPPCHECK": "ON"
+            }
+        },
+        {
+            "name": "clang-tidy",
+            "hidden": true,
+            "cacheVariables": {
+                "my_project_ENABLE_CLANGTIDY": "ON"
+            }
+        },
+        {
+            "name": "sanitize-address",
+            "hidden": true,
+            "cacheVariables": {
+                "my_project_SANITIZER_ADDRESS": "ON"
+            }
+        },
+        {
+            "name": "sanitize-leak",
+            "hidden": true,
+            "cacheVariables": {
+                "my_project_SANITIZER_LEAK": "ON"
+            }
+        },
+        {
+            "name": "sanitize-ub",
+            "hidden": true,
+            "cacheVariables": {
+                "my_project_SANITIZER_UNDEFINED_BEHAVIOR": "ON"
+            }
+        },
+        {
+            "name": "sanitize-thread",
+            "hidden": true,
+            "cacheVariables": {
+                "my_project_SANITIZER_THREAD": "ON"
+            }
+        },
+        {
+            "name": "sanitize-memory",
+            "hidden": true,
+            "cacheVariables": {
+                "my_project_SANITIZER_MEMORY": "ON"
+            }
+        },
+        {
+            "name": "ci-std",
+            "description": "This preset makes sure the project actually builds with at least the specified standard",
+            "hidden": true,
+            "cacheVariables": {
+                "CMAKE_CXX_EXTENSIONS": "OFF",
+                "CMAKE_CXX_STANDARD": "20",
+                "CMAKE_CXX_STANDARD_REQUIRED": "ON"
+            }
+        },
+        {
+            "name": "flags-gcc-clang",
+            "description": "These flags are supported by both GCC and Clang",
+            "hidden": true,
+            "cacheVariables": {
+                "CMAKE_CXX_FLAGS": "-U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=3 -D_GLIBCXX_ASSERTIONS=1 -fstack-protector-strong -fcf-protection=full -fstack-clash-protection -Wall -Wextra -Wpedantic -Wconversion -Wsign-conversion -Wcast-qual -Wformat=2 -Wundef -Werror=float-equal -Wshadow -Wcast-align -Wunused -Wnull-dereference -Wdouble-promotion -Wimplicit-fallthrough -Wextra-semi -Woverloaded-virtual -Wnon-virtual-dtor -Wold-style-cast",
+                "CMAKE_EXE_LINKER_FLAGS": "-Wl,--allow-shlib-undefined,--as-needed,-z,noexecstack,-z,relro,-z,now,-z,nodlopen",
+                "CMAKE_SHARED_LINKER_FLAGS": "-Wl,--allow-shlib-undefined,--as-needed,-z,noexecstack,-z,relro,-z,now,-z,nodlopen"
+            }
+        },
+        {
+            "name": "flags-appleclang",
+            "hidden": true,
+            "cacheVariables": {
+                "CMAKE_CXX_FLAGS": "-fstack-protector-strong -Wall -Wextra -Wpedantic -Wconversion -Wsign-conversion -Wcast-qual -Wformat=2 -Wundef -Werror=float-equal -Wshadow -Wcast-align -Wunused -Wnull-dereference -Wdouble-promotion -Wimplicit-fallthrough -Wextra-semi -Woverloaded-virtual -Wnon-virtual-dtor -Wold-style-cast"
+            }
+        },
+        {
+            "name": "flags-msvc",
+            "description": "Note that all the flags after /W4 are required for MSVC to conform to the language standard",
+            "hidden": true,
+            "cacheVariables": {
+                "CMAKE_CXX_FLAGS": "/sdl /guard:cf /utf-8 /diagnostics:caret /w14165 /w44242 /w44254 /w44263 /w34265 /w34287 /w44296 /w44365 /w44388 /w44464 /w14545 /w14546 /w14547 /w14549 /w14555 /w34619 /w34640 /w24826 /w14905 /w14906 /w14928 /w45038 /W4 /permissive- /volatile:iso /Zc:inline /Zc:preprocessor /Zc:enumTypes /Zc:lambda /Zc:__cplusplus /Zc:externConstexpr /Zc:throwingNew /EHsc",
+                "CMAKE_EXE_LINKER_FLAGS": "/machine:x64 /guard:cf"
+            }
+        },
+        {
+            "name": "ci-linux",
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Linux"
+            },
+            "inherits": [
+                "flags-gcc-clang",
+                "ci-std"
+            ],
+            "generator": "Unix Makefiles",
+            "hidden": true
+        },
+        {
+            "name": "ci-linux-release",
+            "hidden": true,
+            "inherits": [
+                "ci-linux"
+            ],
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release"
+            }
+        },
+        {
+            "name": "ci-linux-debug",
+            "hidden": true,
+            "inherits": [
+                "ci-linux"
+            ],
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug"
+            }
+        },
+        {
+            "name": "ci-darwin",
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Darwin"
+            },
+            "inherits": [
+                "flags-appleclang",
+                "ci-std"
+            ],
+            "generator": "Xcode",
+            "hidden": true
+        },
+        {
+            "name": "ci-win64",
+            "inherits": [
+                "flags-msvc",
+                "ci-std"
+            ],
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Windows"
+            },
+            "generator": "Visual Studio 17 2022",
+            "architecture": "x64",
+            "hidden": true
+        },
+        {
+            "name": "ci-win64-ninja",
+            "inherits": [
+                "flags-msvc",
+                "ci-std"
+            ],
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Windows"
+            },
+            "generator": "Ninja",
+            "toolset": {
+                "value": "v143,host=x64",
+                "strategy": "external"
+            },
+            "architecture": {
+                "value": "x64",
+                "strategy": "external"
+            },
+            "environment": {
+                "UseMultiToolTask": "true",
+                "EnforceProcessCountAcrossBuilds": "true"
+            },
+            "cacheVariables": {
+                "CMAKE_C_COMPILER": "cl.exe",
+                "CMAKE_CXX_COMPILER": "cl.exe"
+            },
+            "hidden": true
+        },
+        {
+            "name": "coverage-linux",
+            "binaryDir": "${sourceDir}/build/coverage",
+            "inherits": "ci-linux",
+            "hidden": true,
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Linux"
+            },
+            "cacheVariables": {
+                "my_project_ENABLE_COVERAGE": "ON"
+            }
+        },
+        {
+            "name": "ci-coverage",
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Linux"
+            },
+            "inherits": [
+                "coverage-linux",
+                "dev-mode",
+                "conan"
+            ],
+            "binaryDir": "${sourceDir}/build/${presetName}"
+        },
+        {
+            "name": "ci-build",
+            "hidden": true
+        },
+        {
+            "name": "ci-multi-config",
+            "description": "Speed up multi-config generators by generating only one configuration instead of the defaults",
+            "hidden": true,
+            "cacheVariables": {
+                "CMAKE_CONFIGURATION_TYPES": "Release"
+            }
+        },
+        {
+            "name": "ci-macos",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Darwin"
+            },
+            "inherits": [
+                "ci-build",
+                "ci-darwin",
+                "ci-multi-config",
+                "dev-mode",
+                "cpm-unix",
+                "conan"
+            ]
+        },
+        {
+            "name": "ci-ubuntu-common",
+            "hidden": true,
+            "inherits": [
+                "ci-build",
+                "conan",
+                "cpm-unix",
+                "dev-mode"
+            ]
+        },
+        {
+            "name": "ci-ubuntu-release",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Linux"
+            },
+            "inherits": [
+                "ci-ubuntu-common",
+                "ci-linux-release"
+            ]
+        },
+        {
+            "name": "ci-ubuntu-debug-sanitize-alub",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Linux"
+            },
+            "inherits": [
+                "ci-ubuntu-common",
+                "ci-linux-debug",
+                "sanitize-address",
+                "sanitize-leak",
+                "sanitize-ub"
+            ]
+        },
+        {
+            "name": "ci-ubuntu-debug-sanitize-thread",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Linux"
+            },
+            "inherits": [
+                "ci-ubuntu-common",
+                "ci-linux-debug",
+                "sanitize-thread"
+            ]
+        },
+        {
+            "name": "ci-windows",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Windows"
+            },
+            "inherits": [
+                "ci-build",
+                "ci-win64",
+                "ci-multi-config",
+                "dev-mode",
+                "cpm-windows",
+                "conan"
+            ]
+        },
+        {
+            "name": "ci-windows-ninja",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Windows"
+            },
+            "inherits": [
+                "ci-build",
+                "ci-win64-ninja",
+                "ci-multi-config",
+                "dev-mode",
+                "cpm-windows",
+                "conan"
+            ]
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "ci-build-common",
+            "hidden": true,
+            "jobs": 2
+        },
+        {
+            "name": "ci-ubuntu-release",
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Linux"
+            },
+            "inherits": [
+                "ci-build-common"
+            ],
+            "configurePreset": "ci-ubuntu-release",
+            "configuration": "Release"
+        },
+        {
+            "name": "ci-ubuntu-debug-sanitize-alub",
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Linux"
+            },
+            "inherits": [
+                "ci-build-common"
+            ],
+            "configurePreset": "ci-ubuntu-debug-sanitize-alub",
+            "configuration": "Debug"
+        },
+        {
+            "name": "ci-ubuntu-debug-sanitize-thread",
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Linux"
+            },
+            "inherits": [
+                "ci-build-common"
+            ],
+            "configurePreset": "ci-ubuntu-debug-sanitize-thread",
+            "configuration": "Debug"
+        },
+        {
+            "name": "ci-windows-release",
+            "inherits": [
+                "ci-build-common"
+            ],
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Windows"
+            },
+            "configurePreset": "ci-windows",
+            "configuration": "Release"
+        }
+    ],
+    "testPresets": [
+        {
+            "name": "ci-test-common",
+            "hidden": true,
+            "output": {
+                "outputOnFailure": true
+            },
+            "execution": {
+                "noTestsAction": "error",
+                "jobs": 2
+            }
+        },
+        {
+            "name": "ci-windows-test-release",
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Windows"
+            },
+            "configurePreset": "ci-windows",
+            "configuration": "Release",
+            "inherits": [
+                "ci-test-common"
+            ]
+        },
+        {
+            "name": "ci-ubuntu-release",
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Linux"
+            },
+            "configurePreset": "ci-ubuntu-release",
+            "configuration": "Release",
+            "inherits": [
+                "ci-test-common"
+            ]
+        },
+        {
+            "name": "ci-ubuntu-debug-sanitize-alub",
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Linux"
+            },
+            "configurePreset": "ci-ubuntu-debug-sanitize-alub",
+            "configuration": "Debug",
+            "inherits": [
+                "ci-test-common"
+            ]
+        },
+        {
+            "name": "ci-ubuntu-debug-sanitize-thread",
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Linux"
+            },
+            "configurePreset": "ci-ubuntu-debug-sanitize-thread",
+            "configuration": "Debug",
+            "inherits": [
+                "ci-test-common"
+            ]
+        }
+    ],
+    "packagePresets": [
+        {
+            "name": "ci-windows-package",
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Windows"
+            },
+            "configurePreset": "ci-windows",
+            "configurations": [
+                "Release"
+            ],
+            "generators": [
+                "ZIP"
+            ]
+        },
+        {
+            "name": "ci-ubuntu-release-package",
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Linux"
+            },
+            "configurePreset": "ci-ubuntu-release",
+            "configurations": [
+                "Release"
+            ],
+            "generators": [
+                "DEB"
+            ],
+            "variables": {
+                "CPACK_DEBIAN_PACKAGE_SHLIBDEPS": "ON"
+            }
+        }
+    ]
+}
