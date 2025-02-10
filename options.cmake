@@ -1,7 +1,6 @@
 # List project customization options here. ${PROJECT_NAME} depends on current context since this options can be included
 # in subprojects as well. All subprojects will have same options as parent project
 
-option(BUILD_SHARED_LIBS "Build shared libraries" OFF)
 option(CMAKE_SKIP_INSTALL_RULES "Build shared libraries" OFF)
 
 option(${PROJECT_NAME}_BUILD_SHARED_LIBS "Build shared libraries for ${PROJECT_NAME}" ${BUILD_SHARED_LIBS})

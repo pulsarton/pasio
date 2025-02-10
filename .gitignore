@@ -12,6 +12,8 @@ conan_test/build
 conan_test/CMakeUserPresets.json
 
 CMakeUserPresets.json
+CMakeCache.cmake
+CMakeFiles
 
 fetch_content_test/build
 

@@ -22,8 +22,8 @@ namespace pasio {
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(core, m) {
-    py::class_<pasio::serial_port_wrapper>(m, "SerialPort")
+PYBIND11_MODULE(pasio, module) {
+    py::class_<pasio::serial_port_wrapper>(module, "SerialPort")
         .def(py::init<const std::string&, unsigned int>())
         .def("write", &pasio::serial_port_wrapper::write)
         .def("read", &pasio::serial_port_wrapper::read);

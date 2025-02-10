@@ -9,7 +9,7 @@ include(cmake/vsenvironment.cmake)
 
 run_vcvarsall()
 
-include(cmake/cpm.cmake)
+# include(cmake/cpm.cmake)
 # include(cmake/conan_provider.cmake)
 
 # cmake-format: off
@@ -19,6 +19,11 @@ project(pasio
         HOMEPAGE_URL "https://example.com/"
         LANGUAGES CXX)
 # cmake-format: on
+
+message(STATUS "Generator: ${CMAKE_GENERATOR}, path: ${CMAKE_MAKE_PROGRAM}")
+message(STATUS "Source directory: ${CMAKE_SOURCE_DIR}")
+message(STATUS "Binary directory: ${CMAKE_BINARY_DIR}")
+message(STATUS "Toolchain: ${CMAKE_TOOLCHAIN_FILE}")
 
 include(CTest)
 include(GNUInstallDirs)
