@@ -1,39 +1,30 @@
-#include <codecvt>
 #include <iostream>
-#include <locale>
 #include <pasio/core/core.hpp>
+#include <pybind11/pybind11.h>
 
-namespace py = pybind11;
-
-class SerialPortWrapper {
-public:
-    SerialPortWrapper(const std::string& port, unsigned int baud_rate) : io(), serial(io) {
+namespace pasio {
+    serial_port_wrapper::serial_port_wrapper(const std::string& port, unsigned int baud_rate) : m_serial(m_io) {
         try {
-            serial.open(std::move(port));
-            serial.set_option(boost::asio::serial_port_base::baud_rate(baud_rate));
+            m_serial.open(port);
+            m_serial.set_option(boost::asio::serial_port_base::baud_rate(baud_rate));
         } catch (const std::exception& e) {
             std::cout << e.what();
         }
     }
-
-    void write(std::string data) { boost::asio::write(serial, boost::asio::buffer(data)); }
-
-    std::string read(size_t size) {
+    void serial_port_wrapper::write(std::string data) { boost::asio::write(m_serial, boost::asio::buffer(data)); }
+    auto serial_port_wrapper::read(size_t size) -> std::string {
         std::vector<char> buf(size);
-        boost::asio::read(serial, boost::asio::buffer(buf, size));
+        boost::asio::read(m_serial, boost::asio::buffer(buf, size));
         return std::string(buf.begin(), buf.end());
     }
+    serial_port_wrapper::~serial_port_wrapper() { m_serial.close(); }
+} // namespace pasio
 
-    ~SerialPortWrapper() { serial.close(); }
-
-private:
-    boost::asio::io_service io;
-    boost::asio::serial_port serial;
-};
+namespace py = pybind11;
 
 PYBIND11_MODULE(core, m) {
-    py::class_<SerialPortWrapper>(m, "SerialPort")
+    py::class_<pasio::serial_port_wrapper>(m, "SerialPort")
         .def(py::init<const std::string&, unsigned int>())
-        .def("write", &SerialPortWrapper::write)
-        .def("read", &SerialPortWrapper::read);
+        .def("write", &pasio::serial_port_wrapper::write)
+        .def("read", &pasio::serial_port_wrapper::read);
 }
