@@ -91,7 +91,7 @@ target_configure_linker(${PROJECT_NAME})
 
 # ---- Collect all sources for static analysis
 
-set(ALL_SOURCE_FILES ${LIBRARY_INCLUDES})
+set(ALL_SOURCE_FILES ${LIBRARY_INCLUDES} ${LIBRARY_SOURCES})
 
 # ---- Clang-tidy target
 
