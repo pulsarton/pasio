@@ -47,15 +47,9 @@ if(${PROJECT_NAME}_ENABLE_PCH)
     target_link_libraries(${PROJECT_NAME}-pch INTERFACE $<BUILD_INTERFACE:${PROJECT_NAME}-options>)
 endif()
 
-# ---- Declare library ----
+# ---- Declare object library to use in tests and module
 
-pybind11_add_module(${PROJECT_NAME} src/core.cpp)
-add_library(${PARENT_PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
-
-# ---- Generate export header
-
-generate_export_header(${PROJECT_NAME} EXPORT_FILE_NAME
-                       ${PROJECT_BINARY_DIR}/include/pasio/${PROJECT_NAME}/exports/exports.hpp)
+add_library(${PROJECT_NAME}-objects OBJECT)
 
 # ---- Collect sources
 
@@ -65,7 +59,7 @@ file(GLOB LIBRARY_SOURCES ${PROJECT_SOURCE_DIR}/src/*.cpp)
 # ---- Set target sources
 
 target_sources(
-    ${PROJECT_NAME}
+    ${PROJECT_NAME}-objects
     PUBLIC FILE_SET
     ${PROJECT_NAME}_Headers TYPE HEADERS BASE_DIRS ${PROJECT_SOURCE_DIR}/include FILES ${LIBRARY_INCLUDES}
     PRIVATE ${LIBRARY_SOURCES})
@@ -73,16 +67,23 @@ target_sources(
 # ---- Set target include dirs
 
 target_include_directories(
-    ${PROJECT_NAME} ${warning_guard}
+    ${PROJECT_NAME}-objects ${warning_guard}
     PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include> $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/include>
            $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
 
 # ---- Add libraries
 
 target_link_libraries(
-    ${PROJECT_NAME}
+    ${PROJECT_NAME}-objects
     PUBLIC Boost::headers pybind11::pybind11 Python::Python
     PRIVATE $<BUILD_INTERFACE:${PROJECT_NAME}-pch> $<BUILD_INTERFACE:${PROJECT_NAME}-options>)
+
+# ---- Declare library ----
+
+pybind11_add_module(${PROJECT_NAME} $<TARGET_OBJECTS:${PROJECT_NAME}-objects>)
+add_library(${PARENT_PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
+
+target_link_libraries(${PROJECT_NAME} PUBLIC $<BUILD_INTERFACE:${PROJECT_NAME}-objects> $<BUILD_INTERFACE:${PROJECT_NAME}-pch> $<BUILD_INTERFACE:${PROJECT_NAME}-options>)
 
 # ---- Configure linker
 
@@ -131,16 +132,16 @@ endif()
 
 # ---- Build tests
 
-# include(CTest)
-# if(BUILD_TESTING AND ${PROJECT_NAME}_BUILD_TESTING)
-#     add_subdirectory(test)
-# endif()
+include(CTest)
+if(BUILD_TESTING AND ${PROJECT_NAME}_BUILD_TESTING)
+    add_subdirectory(test)
+endif()
 
 # ---- Configure install rules
 
-# if(NOT CMAKE_SKIP_INSTALL_RULES AND NOT ${PROJECT_NAME}_SKIP_INSTALL_RULES)
-#     include(cmake/install-rules.cmake)
-# endif()
+if(NOT CMAKE_SKIP_INSTALL_RULES AND NOT ${PROJECT_NAME}_SKIP_INSTALL_RULES)
+    include(cmake/install-rules.cmake)
+endif()
 
 # ---- Project outline
 
