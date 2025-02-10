@@ -7,9 +7,9 @@ set(package ${PROJECT_NAME})
 install(
     TARGETS ${package}
     EXPORT ${package}Targets
-    RUNTIME COMPONENT ${package}_Runtime
-    LIBRARY COMPONENT ${package}_Runtime NAMELINK_COMPONENT ${package}_Development
-    ARCHIVE COMPONENT ${package}_Development
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT ${package}_Runtime
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT ${package}_Runtime NAMELINK_COMPONENT ${package}_Development
+    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT ${package}_Development
     PUBLIC_HEADER FILE_SET ${package}_Headers COMPONENT ${package}_Development)
 
 install(IMPORTED_RUNTIME_ARTIFACTS)
