@@ -49,7 +49,7 @@ endif()
 
 # ---- Declare library ----
 
-pybind11_add_module(${PROJECT_NAME} src/core.cpp)
+pybind11_add_module(${PROJECT_NAME})
 add_library(${PARENT_PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 
 # ---- Generate export header
@@ -90,7 +90,7 @@ target_configure_linker(${PROJECT_NAME})
 
 # ---- Collect all sources for static analysis
 
-set(ALL_SOURCE_FILES ${LIBRARY_INCLUDES})
+set(ALL_SOURCE_FILES ${LIBRARY_INCLUDES} ${LIBRARY_SOURCES})
 
 # ---- Clang-tidy target
 

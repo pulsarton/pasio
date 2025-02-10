@@ -2,8 +2,9 @@
 
 include(CMakeFindDependencyMacro)
 
-find_dependency(fmt REQUIRED)
-find_dependency(pasio-utility REQUIRED)
+find_package(Python REQUIRED)
+find_dependency(Boost REQUIRED)
+find_dependency(Pybind11 REQUIRED)
 
 include(${CMAKE_CURRENT_LIST_DIR}/@PROJECT_NAME@Targets.cmake)
 check_required_components(@PROJECT_NAME@)

@@ -33,9 +33,6 @@ class ProjectRecipe(ConanFile):
 
         project_components = [
             {
-                "target": "utility",
-            },
-            {
                 "target": "core",
                 "lib": "core",
                 "requires": (["utility"] + fmt()),
@@ -72,7 +69,7 @@ class ProjectRecipe(ConanFile):
     def requirements(self):
         self.requires("boost/1.86.0")
         self.requires("pybind11/2.13.6")
-        self.test_requires("catch2/3.5.3")
+        self.test_requires("catch2/3.8.0")
 
     def config_options(self):
         if self.settings.os == "Windows":
