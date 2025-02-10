@@ -7,6 +7,7 @@ option(CMAKE_SKIP_INSTALL_RULES "Build shared libraries" OFF)
 option(${PROJECT_NAME}_BUILD_SHARED_LIBS "Build shared libraries for ${PROJECT_NAME}" ${BUILD_SHARED_LIBS})
 option(${PROJECT_NAME}_BUILD_EXAMPLES "Enable build examples for ${PROJECT_NAME}" OFF)
 option(${PROJECT_NAME}_BUILD_TESTING "Enable build tests for ${PROJECT_NAME}" ${BUILD_TESTING})
+option(${PROJECT_NAME}_BUILD_PYTESTING "Build py tests for core part of project" ${BUILD_TESTING})
 
 option(${PROJECT_NAME}_ENABLE_COVERAGE "Enable coverage info on default" OFF)
 

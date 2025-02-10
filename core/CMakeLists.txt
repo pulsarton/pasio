@@ -75,7 +75,7 @@ target_include_directories(
 
 target_link_libraries(
     ${PROJECT_NAME}-objects
-    PUBLIC Boost::headers pybind11::pybind11 Python::Python
+    PUBLIC Boost::headers pybind11::pybind11 Python3::Python
     PRIVATE $<BUILD_INTERFACE:${PROJECT_NAME}-pch> $<BUILD_INTERFACE:${PROJECT_NAME}-options>)
 
 # ---- Declare library ----
@@ -135,6 +135,11 @@ endif()
 include(CTest)
 if(BUILD_TESTING AND ${PROJECT_NAME}_BUILD_TESTING)
     add_subdirectory(test)
+endif()
+
+include(CTest)
+if(BUILD_TESTING AND ${PROJECT_NAME}_BUILD_PYTESTING)
+    add_subdirectory(pytest)
 endif()
 
 # ---- Configure install rules

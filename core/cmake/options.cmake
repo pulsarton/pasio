@@ -1,5 +1,6 @@
 option(${PROJECT_NAME}_BUILD_EXAMPLES "Build examples for core part of project" ${${PARENT_PROJECT_NAME}_BUILD_EXAMPLES})
 option(${PROJECT_NAME}_BUILD_TESTING "Build tests for core part of project" ${${PARENT_PROJECT_NAME}_BUILD_TESTING})
+option(${PROJECT_NAME}_BUILD_PYTESTING "Build py tests for core part of project" ${${PARENT_PROJECT_NAME}_BUILD_PYTESTING})
 
 option(${PROJECT_NAME}_ENABLE_COVERAGE "Enable coverage flags" ${${PARENT_PROJECT_NAME}_ENABLE_COVERAGE})
 
