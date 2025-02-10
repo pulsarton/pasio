@@ -30,6 +30,8 @@ add_executable(${PROJECT_NAME})
 
 target_link_libraries(${PROJECT_NAME} PRIVATE $<BUILD_INTERFACE:${PARENT_PROJECT_NAME}-objects> Catch2::Catch2WithMain)
 
+target_link_directories(${PROJECT_NAME} PRIVATE ${Python3_RUNTIME_LIBRARY_DIRS})
+
 target_sources(${PROJECT_NAME} PRIVATE ${TEST_SOURCES})
 
 # ---- Discover Catch2 tests
