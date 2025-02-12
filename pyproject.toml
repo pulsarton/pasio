@@ -16,6 +16,15 @@ dependencies = [
     "wheel>=0.45.1",
 ]
 
+[build-system]
+requires = [
+    "setuptools>=42",
+    "wheel",
+    "ninja",
+    "cmake>=3.28",
+]
+build-backend = "setuptools.build_meta"
+
 [tool.cibuildwheel]
 test-command = "pytest {project}/tests"
 test-extras = ["test"]

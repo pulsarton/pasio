@@ -1,6 +1,8 @@
 **build/
 conan/
 install/
+dist
+out
 
 cmake-build-*
 

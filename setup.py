@@ -40,26 +40,35 @@ class CMakeBuild(build_ext):
             f"-DCMAKE_LIBRARY_OUTPUT_DIRECTORY={extdir}{os.sep}",
             f"-DPython3_EXECUTABLE={sys.executable}",
             f"-DCMAKE_BUILD_TYPE={cfg}",  # not used on MSVC, but no harm
-            f"-DBUILD_TESTING=OFF"
+            f"-DBUILD_TESTING=ON",
+            f"-DCMAKE_CXX_EXTENSIONS=OFF"
+            f"-DCMAKE_CXX_STANDARD=20",
+            f"-DCMAKE_CXX_STANDARD_REQUIRED=ON",
+            f"-DCMAKE_POLICY_DEFAULT_CMP0091=NEW",
+            f"-DCMAKE_EXPORT_COMPILE_COMMANDS=ON",
         ]
 
         build_temp = Path(self.build_temp) / ext.name
         if not build_temp.exists():
             build_temp.mkdir(parents=True)
 
-        print(" ".join(["conan", "install", ext.sourcedir, "--build=missing", "--profile", "profiles\\msvc-ninja-x64"]))
-        print(" ".join(["cmake", "-G Ninja", "-S", ext.sourcedir, "-B", "build", "--toolchain", "conan\\Windows\\conan_toolchain.cmake",  *cmake_args, "--fresh"]))
-        print(" ".join(["cmake", "--build", "build", "--parallel", "8"]))
+        conan_install = ["conan", "install", ext.sourcedir, "--build=missing", "--profile", "profiles//gcc-13-x64"]
+        print(" ".join(conan_install))
+        cmake_configure = ["cmake", "-S", ext.sourcedir, "-B", f"{ext.sourcedir}/build", "--toolchain", f"{ext.sourcedir}//conan//Windows//conan_toolchain.cmake", *cmake_args]
+        print(" ".join(conan_install))
+        cmake_build = ["cmake", "--build", f"{ext.sourcedir}/build", "--parallel", "8"]
 
-        subprocess.run(
-            ["conan", "install", ext.sourcedir, "--build=missing", "--profile", "profiles\\msvc-ninja-x64"], check=True
-        )
-        subprocess.run(
-            ["cmake", "-G Ninja", "-S", ext.sourcedir, "-B", "build", "--toolchain", "conan\\Windows\\conan_toolchain.cmake",  *cmake_args, "--fresh"], check=True, shell=True
-        )
-        subprocess.run(
-            ["cmake", "--build", "build", "--parallel", "8"], check=True, shell=True
-        )
+        subprocess.run(conan_install, check=True)
+        subprocess.run(cmake_configure, check=True)
+        subprocess.run(cmake_build, check=True)
+        # subprocess.run(
+        #     ["cmake", "-G Ninja", "-A ", "-S", ext.sourcedir, "-B", "build", "--toolchain", f"{ext.sourcedir}\\conan\\Windows\\conan_toolchain.cmake",  *cmake_args, "--fresh"], check=True, shell=True
+        # )
+        # subprocess.run(
+        #     ["cmake", "--build", "build", "--parallel", "8"], check=True, shell=True
+        # )
+
+        # subprocess.run(["cmake", "--preset", "ci-windows-ninja-wheels"])
 
 
 # The information here can also be placed in setup.cfg - better separation of
