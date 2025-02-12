@@ -7,11 +7,6 @@ endif()
 include(cmake/prelude.cmake)
 include(cmake/vsenvironment.cmake)
 
-run_vcvarsall()
-
-# include(cmake/cpm.cmake)
-# include(cmake/conan_provider.cmake)
-
 # cmake-format: off
 project(pasio
         VERSION 0.1.0
@@ -19,6 +14,8 @@ project(pasio
         HOMEPAGE_URL "https://example.com/"
         LANGUAGES CXX)
 # cmake-format: on
+
+# run_vcvarsall()
 
 message(STATUS "Generator: ${CMAKE_GENERATOR}, path: ${CMAKE_MAKE_PROGRAM}")
 message(STATUS "Source directory: ${CMAKE_SOURCE_DIR}")

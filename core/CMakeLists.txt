@@ -75,7 +75,7 @@ target_include_directories(
 
 target_link_libraries(
     ${PROJECT_NAME}-objects
-    PUBLIC Boost::headers pybind11::module Python3::Module
+    PUBLIC asio::asio pybind11::module Python3::Module
     PRIVATE $<BUILD_INTERFACE:${PROJECT_NAME}-pch> $<BUILD_INTERFACE:${PROJECT_NAME}-options>)
 
 # ---- Declare library ----
@@ -83,7 +83,8 @@ target_link_libraries(
 pybind11_add_module(${PROJECT_NAME} $<TARGET_OBJECTS:${PROJECT_NAME}-objects>)
 add_library(${PARENT_PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 
-target_link_libraries(${PROJECT_NAME} PRIVATE $<BUILD_INTERFACE:${PROJECT_NAME}-pch> $<BUILD_INTERFACE:${PROJECT_NAME}-options>)
+target_link_libraries(${PROJECT_NAME} PUBLIC asio::asio pybind11::module Python3::Module $<BUILD_INTERFACE:${PROJECT_NAME}-objects>
+                    PRIVATE $<BUILD_INTERFACE:${PROJECT_NAME}-pch> $<BUILD_INTERFACE:${PROJECT_NAME}-options>)
 
 # ---- Configure linker
 
