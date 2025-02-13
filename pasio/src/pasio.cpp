@@ -1,5 +1,5 @@
 #include <iostream>
-#include <pasio/core/core.hpp>
+#include <pasio/pasio.hpp>
 #include <pybind11/pybind11.h>
 
 namespace pasio {
@@ -11,12 +11,15 @@ namespace pasio {
             std::cout << e.what();
         }
     }
+
     void serial_port_wrapper::write(std::string data) { asio::write(m_serial, asio::buffer(data)); }
+
     auto serial_port_wrapper::read(size_t size) -> std::string {
         std::vector<char> buf(size);
         asio::read(m_serial, asio::buffer(buf, size));
         return std::string(buf.begin(), buf.end());
     }
+
     serial_port_wrapper::~serial_port_wrapper() { m_serial.close(); }
 } // namespace pasio
 

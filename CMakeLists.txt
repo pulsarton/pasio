@@ -75,7 +75,7 @@ target_sanitizers(
     SANITIZER_MEMORY
     ${${PROJECT_NAME}_SANITIZER_MEMORY})
 
-register_module(core)
+register_module(pasio)
 
 # ---- Target to link with all library modules
 

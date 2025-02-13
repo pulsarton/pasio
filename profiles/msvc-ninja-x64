@@ -9,4 +9,3 @@ compiler.version=194
 os=Windows
 [conf]
 tools.build:jobs=16
-tools.cmake.cmaketoolchain:generator=Ninja

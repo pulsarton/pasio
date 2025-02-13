@@ -40,36 +40,43 @@ class CMakeBuild(build_ext):
             f"-DCMAKE_LIBRARY_OUTPUT_DIRECTORY={extdir}{os.sep}",
             f"-DPython3_EXECUTABLE={sys.executable}",
             f"-DCMAKE_BUILD_TYPE={cfg}",  # not used on MSVC, but no harm
-            f"-DBUILD_TESTING=ON",
-            f"-DCMAKE_CXX_EXTENSIONS=OFF"
-            f"-DCMAKE_CXX_STANDARD=20",
-            f"-DCMAKE_CXX_STANDARD_REQUIRED=ON",
-            f"-DCMAKE_POLICY_DEFAULT_CMP0091=NEW",
-            f"-DCMAKE_EXPORT_COMPILE_COMMANDS=ON",
+            f"-DBUILD_TESTING=OFF",
+            f"-DCMAKE_EXPORT_COMPILE_COMMANDS=ON"
         ]
 
         build_temp = Path(self.build_temp) / ext.name
         if not build_temp.exists():
             build_temp.mkdir(parents=True)
 
-        conan_install = ["conan", "install", ext.sourcedir, "--build=missing", "--profile", "profiles//gcc-13-x64"]
+        conan_install = ["conan", "install", ext.sourcedir, "--build=missing", "--profile", "profiles//msvc-ninja-x64"]
         print(" ".join(conan_install))
-        cmake_configure = ["cmake", "-S", ext.sourcedir, "-B", f"{ext.sourcedir}/build", "--toolchain", f"{ext.sourcedir}//conan//Windows//conan_toolchain.cmake", *cmake_args]
+        cmake_configure = [
+            f'D:/programs/cmake/bin/cmake.EXE', 
+            '-DCMAKE_EXPORT_COMPILE_COMMANDS=ON', 
+            '-Dpasio_DEVELOPER_MODE=ON',
+            '-DCMAKE_POLICY_DEFAULT_CMP0091=NEW', 
+            '-Dpasio_ENABLE_CPPCHECK=ON',
+            '-Dpasio_ENABLE_CLANGTIDY=ON', 
+            '-DCMAKE_CXX_FLAGS=/sdl /guard:cf /utf-8 /diagnostics:caret /w14165 /w44242 /w44254 /w44263 /w34265 /w34287 /w44296 /w44365 /w44388 /w44464 /w14545 /w14546 /w14547 /w14549 /w14555 /w34619 /w34640 /w24826 /w14905 /w14906 /w14928 /w45038 /W4 /permissive- /volatile:iso /Zc:inline /Zc:preprocessor /Zc:enumTypes /Zc:lambda /Zc:__cplusplus /Zc:externConstexpr /Zc:throwingNew /EHsc', 
+            '-DCMAKE_EXE_LINKER_FLAGS=/machine:x64 /guard:cf',
+            '-DCMAKE_CXX_EXTENSIONS=OFF', 
+            '-DCMAKE_CXX_STANDARD=20', '-DCMAKE_CXX_STANDARD_REQUIRED=ON',
+            '-DCMAKE_TOOLCHAIN_FILE=D:/coding/cpp/pasio/conan/Windows/conan_toolchain.cmake',
+            '-SD:/coding/cpp/pasio',
+            '-BD:/coding/cpp/pasio/build', 
+            '-G',
+            "Visual Studio 17 2022",
+            '-A', 
+            "x64", 
+            f"-DCMAKE_LIBRARY_OUTPUT_DIRECTORY={extdir}{os.sep}"
+            ]
+        # cmake_configure = ["cmake", "--fresh", "-A", "x64", "-S", ext.sourcedir, "-B", f"{ext.sourcedir}/build", "--toolchain", f"{ext.sourcedir}//conan//Windows//conan_toolchain.cmake", *cmake_args]
         print(" ".join(conan_install))
         cmake_build = ["cmake", "--build", f"{ext.sourcedir}/build", "--parallel", "8"]
 
         subprocess.run(conan_install, check=True)
         subprocess.run(cmake_configure, check=True)
         subprocess.run(cmake_build, check=True)
-        # subprocess.run(
-        #     ["cmake", "-G Ninja", "-A ", "-S", ext.sourcedir, "-B", "build", "--toolchain", f"{ext.sourcedir}\\conan\\Windows\\conan_toolchain.cmake",  *cmake_args, "--fresh"], check=True, shell=True
-        # )
-        # subprocess.run(
-        #     ["cmake", "--build", "build", "--parallel", "8"], check=True, shell=True
-        # )
-
-        # subprocess.run(["cmake", "--preset", "ci-windows-ninja-wheels"])
-
 
 # The information here can also be placed in setup.cfg - better separation of
 # logic and declaration, and simpler if you include description/version in a file.
