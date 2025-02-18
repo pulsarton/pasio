@@ -399,6 +399,16 @@
                 "cpm-windows",
                 "conan"
             ]
+        },
+        {
+            "name": "ci-windows-ninja-wheels",
+            "inherits": [
+                "ci-windows-ninja"
+            ],
+            "cacheVariables": {
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+            },
+            "binaryDir": "${sourceDir}/build"
         }
     ],
     "buildPresets": [
@@ -457,6 +467,19 @@
                 "rhs": "Windows"
             },
             "configurePreset": "ci-windows",
+            "configuration": "Release"
+        },
+        {
+            "name": "ci-windows-ninja-release",
+            "inherits": [
+                "ci-build-common"
+            ],
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Windows"
+            },
+            "configurePreset": "ci-windows-ninja",
             "configuration": "Release"
         }
     ],

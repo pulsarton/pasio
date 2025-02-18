@@ -1,7 +1,7 @@
 #ifndef pasio_HPP
 #define pasio_HPP
 
-#include <boost/asio.hpp>
+#include <asio.hpp>
 
 namespace pasio {
     class serial_port_wrapper {
@@ -19,8 +19,8 @@ namespace pasio {
         ~serial_port_wrapper();
 
     private:
-        boost::asio::io_service m_io;
-        boost::asio::serial_port m_serial;
+        asio::io_service m_io;
+        asio::serial_port m_serial;
     };
 } // namespace pasio
 

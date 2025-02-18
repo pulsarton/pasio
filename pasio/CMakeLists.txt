@@ -24,6 +24,10 @@ add_library(${PROJECT_NAME}-options INTERFACE)
 
 target_link_libraries(${PROJECT_NAME}-options INTERFACE $<BUILD_INTERFACE:${PARENT_PROJECT_NAME}-options>)
 
+# ---- Compile options
+
+target_compile_options(${PROJECT_NAME}-options INTERFACE $<$<CXX_COMPILER_ID:MSVC>:/wd4251>)
+
 # ---- Add sanitizers
 
 target_sanitizers(
@@ -71,11 +75,15 @@ target_include_directories(
     PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include> $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/include>
            $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
 
+# ---- Export all symbols 
+
+set_target_properties(${PROJECT_NAME}-objects PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS ON)
+
 # ---- Add libraries
 
 target_link_libraries(
     ${PROJECT_NAME}-objects
-    PUBLIC Boost::headers pybind11::pybind11 Python3::Python
+    PUBLIC asio::asio pybind11::module pybind11::pybind11 Python3::Python
     PRIVATE $<BUILD_INTERFACE:${PROJECT_NAME}-pch> $<BUILD_INTERFACE:${PROJECT_NAME}-options>)
 
 # ---- Declare library ----
@@ -83,7 +91,21 @@ target_link_libraries(
 pybind11_add_module(${PROJECT_NAME} $<TARGET_OBJECTS:${PROJECT_NAME}-objects>)
 add_library(${PARENT_PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 
-target_link_libraries(${PROJECT_NAME} PUBLIC $<BUILD_INTERFACE:${PROJECT_NAME}-objects> $<BUILD_INTERFACE:${PROJECT_NAME}-pch> $<BUILD_INTERFACE:${PROJECT_NAME}-options>)
+# ---- Module dependencies
+
+target_link_libraries(${PROJECT_NAME} PUBLIC asio::asio pybind11::module pybind11::pybind11 Python3::Python $<BUILD_INTERFACE:${PROJECT_NAME}-objects>
+                    PRIVATE $<BUILD_INTERFACE:${PROJECT_NAME}-pch> $<BUILD_INTERFACE:${PROJECT_NAME}-options>)
+
+# ---- Includes 
+
+target_include_directories(
+    ${PROJECT_NAME}
+    PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include> $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/include>
+           $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
+
+# ---- Export all symbols 
+
+set_target_properties(${PROJECT_NAME} PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS ON)
 
 # ---- Configure linker
 

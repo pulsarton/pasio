@@ -1,0 +1,172 @@
+running bdist_wheel
+running build
+running build_ext
+
+======== Input profiles ========
+Profile host:
+[settings]
+arch=x86_64
+build_type=Release
+compiler=gcc
+compiler.cppstd=gnu20
+compiler.libcxx=libstdc++11
+compiler.version=13
+os=Linux
+[conf]
+tools.build:jobs=10
+tools.cmake.cmaketoolchain:generator=Ninja
+
+Profile build:
+[settings]
+arch=x86_64
+build_type=Release
+compiler=gcc
+compiler.cppstd=gnu20
+compiler.libcxx=libstdc++11
+compiler.version=13
+os=Linux
+[conf]
+tools.build:jobs=10
+tools.cmake.cmaketoolchain:generator=Ninja
+
+pasio
+
+======== Computing dependency graph ========
+Graph root
+    conanfile.py (pasio/0.1.0): /mnt/d/coding/cpp/pasio/conanfile.py
+Requirements
+    asio/1.32.0#5162a75b289fd36a1910431607fb6a31 - Cache
+    pybind11/2.13.6#7d301b76bc1a308a51b506dd2de145b0 - Cache
+Test requirements
+    catch2/3.8.0#2c87b60d2c85f3c8509bb209f37cbf67 - Cache
+Build requirements
+    cmake/3.22.6#32cced101c6df0fab43e8d00bd2483eb - Cache
+Resolved version ranges
+    cmake/[>=3.16 <4]: cmake/3.22.6
+
+======== Computing necessary packages ========
+Requirements
+    asio/1.32.0#5162a75b289fd36a1910431607fb6a31:da39a3ee5e6b4b0d3255bfef95601890afd80709#95bb2f8db03eb9630d72001c21dc4429 - Cache
+    pybind11/2.13.6#7d301b76bc1a308a51b506dd2de145b0:da39a3ee5e6b4b0d3255bfef95601890afd80709#9d289186dc0b30c7d92df3b5a8f27a74 - Cache
+Test requirements
+    catch2/3.8.0#2c87b60d2c85f3c8509bb209f37cbf67:82ae108ef02682b01d43cb72e99c229d158fc1fb#eaf902080a4097fe35482d7938a25bd0 - Cache
+Build requirements
+Skipped binaries
+    cmake/3.22.6
+
+======== Installing packages ========
+asio/1.32.0: Already installed! (1 of 3)
+pybind11/2.13.6: Already installed! (2 of 3)
+catch2/3.8.0: Already installed! (3 of 3)
+WARN: deprecated: Usage of deprecated Conan 1.X features that will be removed in Conan 2.X:
+WARN: deprecated:     'cpp_info.names' used in: pybind11/2.13.6
+WARN: deprecated:     'cpp_info.build_modules' used in: pybind11/2.13.6
+
+======== Finalizing install (deploy, generators) ========
+conanfile.py (pasio/0.1.0): Calling generate()
+conanfile.py (pasio/0.1.0): Generators folder: /mnt/d/coding/cpp/pasio/conan/Windows
+conanfile.py (pasio/0.1.0): CMakeDeps necessary find_package() and targets for your CMakeLists.txt
+    find_package(asio)
+    find_package(pybind11)
+    find_package(Catch2)
+    target_link_libraries(... asio::asio pybind11_all_do_not_use Catch2::Catch2WithMain)
+conanfile.py (pasio/0.1.0): CMakeToolchain generated: conan_toolchain.cmake
+conanfile.py (pasio/0.1.0): CMakeToolchain: Preset 'conan-release' added to CMakePresets.json.
+    (cmake>=3.23) cmake --preset conan-release
+    (cmake<3.23) cmake <path> -G Ninja -DCMAKE_TOOLCHAIN_FILE=../../conan/Windows/conan_toolchain.cmake  -DCMAKE_POLICY_DEFAULT_CMP0091=NEW -DCMAKE_BUILD_TYPE=Release
+conanfile.py (pasio/0.1.0): CMakeToolchain generated: /mnt/d/coding/cpp/pasio/conan/Windows/CMakePresets.json
+conanfile.py (pasio/0.1.0): Generating aggregated env files
+conanfile.py (pasio/0.1.0): Generated aggregated env files: ['conanbuild.sh', 'conanrun.sh']
+Install finished successfully
+-- Using Conan toolchain: /mnt/d/coding/cpp/pasio/conan/Windows/conan_toolchain.cmake
+-- Conan toolchain: Setting CMAKE_POSITION_INDEPENDENT_CODE=ON (options.fPIC)
+-- Conan toolchain: Defining architecture flag: -m64
+-- Conan toolchain: C++ Standard 20 with extensions ON
+-- Conan toolchain: Setting BUILD_SHARED_LIBS = OFF
+-- The CXX compiler identification is GNU 13.1.0
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/bin/g++-13 - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Generator: Unix Makefiles, path: /usr/bin/gmake
+-- Source directory: /mnt/d/coding/cpp/pasio
+-- Binary directory: /mnt/d/coding/cpp/pasio/build
+-- Toolchain: /mnt/d/coding/cpp/pasio/conan/Windows/conan_toolchain.cmake
+-- Found Python3: /mnt/d/coding/cpp/pasio/.venv/bin/python (found version "3.12.8") found components: Interpreter Development Development.Module Development.Embed
+-- Conan: Target declared 'asio::asio'
+-- Conan: Component target declared 'pybind11::headers'
+-- Conan: Component target declared 'pybind11::pybind11'
+-- Conan: Component target declared 'pybind11::embed'
+-- Conan: Component target declared 'pybind11::module'
+-- Conan: Component target declared 'pybind11::python_link_helper'
+-- Conan: Component target declared 'pybind11::windows_extras'
+-- Conan: Component target declared 'pybind11::lto'
+-- Conan: Component target declared 'pybind11::thin_lto'
+-- Conan: Component target declared 'pybind11::opt_size'
+-- Conan: Component target declared 'pybind11::python2_no_register'
+-- Conan: Target declared 'pybind11_all_do_not_use'
+-- Conan: Including build module from '/home/vsevolod/.conan2/p/pybin0711cb137f6d7/p/lib/cmake/pybind11/pybind11Common.cmake'
+-- Performing Test HAS_FLTO
+-- Performing Test HAS_FLTO - Success
+-- [pasio] Python3: /mnt/d/coding/cpp/pasio/.venv/bin/python
+-- Could NOT find Doxygen (missing: DOXYGEN_EXECUTABLE) 
+-- Conan: Component target declared 'Catch2::Catch2'
+-- Conan: Component target declared 'Catch2::Catch2WithMain'
+-- The C compiler identification is GNU 13.1.0
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /usr/bin/gcc-13 - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Configuring done (2.5s)
+-- Generating done (0.9s)
+-- Build files have been written to: /mnt/d/coding/cpp/pasio/build
+[ 20%] Building CXX object core/CMakeFiles/core-objects.dir/cmake_pch.hxx.gch
+[ 40%] Building CXX object core/CMakeFiles/core-objects.dir/src/core.cpp.o
+[ 40%] Built target core-objects
+[ 60%] Linking CXX shared module ../lib.linux-x86_64-cpython-312/core.cpython-312-x86_64-linux-gnu.so
+[ 80%] Building CXX object core/test/CMakeFiles/core-tests.dir/src/core_test.cpp.o
+[ 80%] Built target core
+[100%] Linking CXX executable core-tests
+[100%] Built target core-tests
+/mnt/d/coding/cpp/pasio/.venv/lib/python3.12/site-packages/setuptools/_distutils/cmd.py:79: SetuptoolsDeprecationWarning: setup.py install is deprecated.
+!!
+
+        ********************************************************************************
+        Please avoid running ``setup.py`` directly.
+        Instead, use pypa/build, pypa/installer or other
+        standards-based tools.
+
+        See https://blog.ganssle.io/articles/2021/10/setup-py-deprecated.html for details.
+        ********************************************************************************
+
+!!
+  self.initialize_options()
+conan install /mnt/d/coding/cpp/pasio --build=missing --profile profiles//gcc-13-x64
+conan install /mnt/d/coding/cpp/pasio --build=missing --profile profiles//gcc-13-x64
+installing to build/bdist.linux-x86_64/wheel
+running install
+running install_lib
+creating build/bdist.linux-x86_64/wheel
+copying build/lib.linux-x86_64-cpython-312/core.cpython-312-x86_64-linux-gnu.so -> build/bdist.linux-x86_64/wheel/.
+running install_egg_info
+running egg_info
+writing pasio.egg-info/PKG-INFO
+writing dependency_links to pasio.egg-info/dependency_links.txt
+writing requirements to pasio.egg-info/requires.txt
+writing top-level names to pasio.egg-info/top_level.txt
+reading manifest file 'pasio.egg-info/SOURCES.txt'
+adding license file 'LICENSE'
+writing manifest file 'pasio.egg-info/SOURCES.txt'
+Copying pasio.egg-info to build/bdist.linux-x86_64/wheel/./pasio-0.1.0-py3.12.egg-info
+running install_scripts
+creating build/bdist.linux-x86_64/wheel/pasio-0.1.0.dist-info/WHEEL
+creating 'dist/pasio-0.1.0-cp312-cp312-linux_x86_64.whl' and adding 'build/bdist.linux-x86_64/wheel' to it
+adding 'core.cpython-312-x86_64-linux-gnu.so'
+adding 'pasio-0.1.0.dist-info/LICENSE'
+adding 'pasio-0.1.0.dist-info/METADATA'
+adding 'pasio-0.1.0.dist-info/WHEEL'
+adding 'pasio-0.1.0.dist-info/top_level.txt'
+adding 'pasio-0.1.0.dist-info/RECORD'
+removing build/bdist.linux-x86_64/wheel
