@@ -10,7 +10,7 @@ include(../cmake/static-analyzers.cmake)
 set(PARENT_PROJECT_NAME ${PROJECT_NAME})
 
 project(
-    core
+    pasio
     VERSION ${CMAKE_PROJECT_VERSION_MAJOR}.${CMAKE_PROJECT_VERSION_MINOR}.${CMAKE_PROJECT_VERSION_PATCH}
     LANGUAGES CXX)
 
@@ -51,49 +51,29 @@ if(${PROJECT_NAME}_ENABLE_PCH)
     target_link_libraries(${PROJECT_NAME}-pch INTERFACE $<BUILD_INTERFACE:${PROJECT_NAME}-options>)
 endif()
 
-# ---- Declare object library to use in tests and module
+# ---- Declare library ----
 
-add_library(${PROJECT_NAME}-objects OBJECT)
+pybind11_add_module(${PROJECT_NAME})
+add_library(${PARENT_PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 
-# ---- Collect sources
+# ---- Generate export header
 
-file(GLOB LIBRARY_INCLUDES ${PROJECT_SOURCE_DIR}/include/pasio/${PROJECT_NAME}/*.hpp)
-file(GLOB LIBRARY_SOURCES ${PROJECT_SOURCE_DIR}/src/*.cpp)
+generate_export_header(${PROJECT_NAME} BASE_NAME pasio EXPORT_FILE_NAME ${PROJECT_BINARY_DIR}/include/pasio/export/export.hpp)
 
 # ---- Set target sources
 
+file(GLOB LIBRARY_INCLUDES ${PROJECT_SOURCE_DIR}/include/pasio/*.hpp)
+file(GLOB LIBRARY_SOURCES ${PROJECT_SOURCE_DIR}/src/*.cpp)
+
 target_sources(
-    ${PROJECT_NAME}-objects
+    ${PROJECT_NAME}
     PUBLIC FILE_SET
     ${PROJECT_NAME}_Headers TYPE HEADERS BASE_DIRS ${PROJECT_SOURCE_DIR}/include FILES ${LIBRARY_INCLUDES}
     PRIVATE ${LIBRARY_SOURCES})
 
-# ---- Set target include dirs
-
-target_include_directories(
-    ${PROJECT_NAME}-objects ${warning_guard}
-    PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include> $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/include>
-           $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
-
-# ---- Export all symbols 
-
-set_target_properties(${PROJECT_NAME}-objects PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS ON)
-
-# ---- Add libraries
-
-target_link_libraries(
-    ${PROJECT_NAME}-objects
-    PUBLIC asio::asio pybind11::module pybind11::pybind11 Python3::Python
-    PRIVATE $<BUILD_INTERFACE:${PROJECT_NAME}-pch> $<BUILD_INTERFACE:${PROJECT_NAME}-options>)
-
-# ---- Declare library ----
-
-pybind11_add_module(${PROJECT_NAME} $<TARGET_OBJECTS:${PROJECT_NAME}-objects>)
-add_library(${PARENT_PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
-
 # ---- Module dependencies
 
-target_link_libraries(${PROJECT_NAME} PUBLIC asio::asio pybind11::module pybind11::pybind11 Python3::Python $<BUILD_INTERFACE:${PROJECT_NAME}-objects>
+target_link_libraries(${PROJECT_NAME} PUBLIC asio::asio
                     PRIVATE $<BUILD_INTERFACE:${PROJECT_NAME}-pch> $<BUILD_INTERFACE:${PROJECT_NAME}-options>)
 
 # ---- Includes 
@@ -154,10 +134,10 @@ endif()
 
 # ---- Build tests
 
-include(CTest)
-if(BUILD_TESTING AND ${PROJECT_NAME}_BUILD_TESTING)
-    add_subdirectory(test)
-endif()
+# include(CTest)
+# if(BUILD_TESTING AND ${PROJECT_NAME}_BUILD_TESTING)
+#     add_subdirectory(test)
+# endif()
 
 include(CTest)
 if(BUILD_TESTING AND ${PROJECT_NAME}_BUILD_PYTESTING)

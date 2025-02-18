@@ -8,7 +8,7 @@ include(cmake/prelude.cmake)
 include(cmake/vsenvironment.cmake)
 
 # cmake-format: off
-project(pasio
+project(pasio-core
         VERSION 0.1.0
         DESCRIPTION "Short description"
         HOMEPAGE_URL "https://example.com/"

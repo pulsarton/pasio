@@ -28,11 +28,18 @@ file(GLOB TEST_SOURCES ${PROJECT_SOURCE_DIR}/src/*.cpp)
 
 add_executable(${PROJECT_NAME})
 
-target_link_libraries(${PROJECT_NAME} PRIVATE $<BUILD_INTERFACE:${PARENT_PROJECT_NAME}-objects> Catch2::Catch2WithMain)
+target_link_libraries(${PROJECT_NAME} PRIVATE Catch2::Catch2WithMain Python3::Python)
 
 target_link_directories(${PROJECT_NAME} PRIVATE ${Python3_RUNTIME_LIBRARY_DIRS})
 
 target_sources(${PROJECT_NAME} PRIVATE ${TEST_SOURCES})
+
+# ---- Collect runtime
+
+if(WIN32)
+    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_RUNTIME_DLLS:${PROJECT_NAME}> $<TARGET_FILE_DIR:${PROJECT_NAME}>/)
+endif()
 
 # ---- Discover Catch2 tests
 
