@@ -4,9 +4,9 @@ include(GNUInstallDirs)
 install(
     TARGETS ${PROJECT_NAME}
     RUNTIME_DEPENDENCY_SET ${PROJECT_NAME}_WheelDeps
-    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT ${PROJECT_NAME}_Wheel
-    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT ${PROJECT_NAME}_Wheel
-    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT ${PROJECT_NAME}_Wheel
+    RUNTIME DESTINATION . COMPONENT ${PROJECT_NAME}_Wheel
+    LIBRARY DESTINATION . COMPONENT ${PROJECT_NAME}_Wheel
+    ARCHIVE DESTINATION . COMPONENT ${PROJECT_NAME}_Wheel
     EXCLUDE_FROM_ALL)
 
 set(_pre_exclude
@@ -20,22 +20,23 @@ set(_pre_exclude
 
 set(_post_exclude [[.*/system32/.*\.dll]] [[^/lib.*]] [[^/usr/lib.*]])
 
-install(
-    RUNTIME_DEPENDENCY_SET ${PROJECT_NAME}_WheelDeps
-    PRE_EXCLUDE_REGEXES [[api-ms-win-.*]]
-                        [[ext-ms-.*]]
-                        [[kernel32\.dll]]
-                        [[python.*\.dll]] 
-                        [[libc\.so\..*]]
-                        [[libgcc_s\.so\..*]]
-                        [[libm\.so\..*]]
-                        [[libstdc\+\+\.so\..*]]
-                        [[python.*\.so.*]] 
-    POST_EXCLUDE_REGEXES [[.*/system32/.*\.dll]] 
-                         [[^/lib.*]] 
-                         [[^/usr/lib.*]]
-    DIRECTORIES "${CONAN_RUNTIME_LIB_DIRS}"
-    COMPONENT ${PROJECT_NAME}_Wheel OPTIONAL EXCLUDE_FROM_ALL)
+# install(
+#     RUNTIME_DEPENDENCY_SET ${PROJECT_NAME}_WheelDeps
+#     PRE_EXCLUDE_REGEXES [[api-ms-win-.*]]
+#                         [[ext-ms-.*]]
+#                         [[kernel32\.dll]]
+#                         [[python.*\.dll]] 
+#                         [[libc\.so\..*]]
+#                         [[libgcc_s\.so\..*]]
+#                         [[libm\.so\..*]]
+#                         [[libstdc\+\+\.so\..*]]
+#                         [[python.*\.so.*]] 
+#     POST_EXCLUDE_REGEXES [[.*/system32/.*\.dll]] 
+#                          [[^/lib.*]] 
+#                          [[^/usr/lib.*]]
+#     DIRECTORIES "${CONAN_RUNTIME_LIB_DIRS}"
+#     RUNTIME DESTINATION . COMPONENT ${PROJECT_NAME}_Wheel OPTIONAL EXCLUDE_FROM_ALL
+#     LIBRARY DESTINATION . COMPONENT ${PROJECT_NAME}_Wheel OPTIONAL EXCLUDE_FROM_ALL)
 
 # find_package(<package>) call for consumers to find this project
 set(package ${PROJECT_NAME})
@@ -47,9 +48,6 @@ install(
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT ${package}_Runtime NAMELINK_COMPONENT ${package}_Development
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT ${package}_Development
     FILE_SET ${package}_Headers DESTINATION ${CMAKE_INSTALL_INCLUDEDIR} COMPONENT ${package}_Development)
-
-install(IMPORTED_RUNTIME_ARTIFACTS)
-install(RUNTIME_DEPENDENCY_SET ${package}_Dependency)
 
 write_basic_package_version_file(${package}ConfigVersion.cmake COMPATIBILITY SameMajorVersion ARCH_INDEPENDENT)
 
@@ -79,6 +77,10 @@ install(
     NAMESPACE ${package}::
     DESTINATION ${${package}_INSTALL_CMAKEDIR}
     COMPONENT ${package}_Development)
+
+if(WIN32)
+    install(FILES $<TARGET_PDB_FILE:${PROJECT_NAME}> DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT ${package}_Development CONFIGURATIONS Debug RelWithDebInfo)
+endif()
 
 if(PROJECT_IS_TOP_LEVEL)
     include(CPack)

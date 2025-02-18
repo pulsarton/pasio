@@ -1,15 +1,28 @@
 import os
 import re
 import subprocess
-import sys
 from pathlib import Path
-
+from dataclasses import dataclass
+import os
+import subprocess
+import sys
+from setuptools import setup
+from setuptools.command.build_ext import build_ext
+from setuptools.command.install import install
+from setuptools.command.sdist import sdist
+from pathlib import Path
 from setuptools import Extension, setup
 from setuptools.command.build_ext import build_ext
 from setuptools import setup, find_packages
 
+@dataclass
+class Preset:
+    cmake_preset: str
+    conan_profile: str
+
 PLAT_TO_CONAN = {
-    "win-amd64": "msvc-ninja-x64"
+    "win-amd64": Preset("ci-windows-ninja", "profiles//msvc-ninja-x64"),
+    "linux_x86_64": Preset("ci-ubuntu-release", "profiles/gcc-13-x64"),
 }
 
 
@@ -24,52 +37,35 @@ class CMakeExtension(Extension):
 
 class CMakeBuild(build_ext):
     def build_extension(self, ext: CMakeExtension) -> None:
-        # Must be in this form due to bug in .resolve() only fixed in Python 3.10+
-        ext_fullpath = Path.cwd() / self.get_ext_fullpath(ext.name)
-        extdir = ext_fullpath.parent.resolve()
+        try:
+            subprocess.check_output(["cmake", "--version"])
+        except OSError:
+            raise RuntimeError("CMake is not available.") from None
+        
+        try:
+            subprocess.check_output(["ninja", "--version"])
+        except OSError:
+            raise RuntimeError("Ninja is not available.") from None
+        
+        try:
+            subprocess.check_output(["conan", "--version"])
+        except OSError:
+            raise RuntimeError("Conan is not available.") from None
+        
+        platfrom: str = self.plat_name
+        print(f"platform is {platfrom}")
 
-        # Using this requires trailing slash for auto-detection & inclusion of
-        # auxiliary "native" libs
+        build_pair = PLAT_TO_CONAN[platfrom]
+        cmake_preset = build_pair.cmake_preset
+        conan_profile = build_pair.conan_profile
 
-        cfg = "Release"
-
-        # Set Python_EXECUTABLE instead if you use PYBIND11_FINDPYTHON
-        # EXAMPLE_VERSION_INFO shows you how to pass a value into the C++ code
-        # from Python.
-        cmake_args = [
-            f"-DCMAKE_LIBRARY_OUTPUT_DIRECTORY={extdir}{os.sep}",
-            f"-DPython3_EXECUTABLE={sys.executable}",
-            f"-DCMAKE_BUILD_TYPE={cfg}",  # not used on MSVC, but no harm
-            f"-DBUILD_TESTING=ON",
-            f"-DCMAKE_CXX_EXTENSIONS=OFF"
-            f"-DCMAKE_CXX_STANDARD=20",
-            f"-DCMAKE_CXX_STANDARD_REQUIRED=ON",
-            f"-DCMAKE_POLICY_DEFAULT_CMP0091=NEW",
-            f"-DCMAKE_EXPORT_COMPILE_COMMANDS=ON",
-        ]
-
-        build_temp = Path(self.build_temp) / ext.name
-        if not build_temp.exists():
-            build_temp.mkdir(parents=True)
-
-        conan_install = ["conan", "install", ext.sourcedir, "--build=missing", "--profile", "profiles//gcc-13-x64"]
+        conan_install = ["conan", "install", ".", "-pr", conan_profile, "--build=missing"]
         print(" ".join(conan_install))
-        cmake_configure = ["cmake", "-S", ext.sourcedir, "-B", f"{ext.sourcedir}/build", "--toolchain", f"{ext.sourcedir}//conan//Windows//conan_toolchain.cmake", *cmake_args]
-        print(" ".join(conan_install))
-        cmake_build = ["cmake", "--build", f"{ext.sourcedir}/build", "--parallel", "8"]
+        cmake_configure = ["cmake", "--preset", cmake_preset, "-DBUILD_TESTING=OFF -Dpasio_BUILD_DOCS=OFF"]
+        print(" ".join(cmake_configure))
 
-        subprocess.run(conan_install, check=True)
-        subprocess.run(cmake_configure, check=True)
-        subprocess.run(cmake_build, check=True)
-        # subprocess.run(
-        #     ["cmake", "-G Ninja", "-A ", "-S", ext.sourcedir, "-B", "build", "--toolchain", f"{ext.sourcedir}\\conan\\Windows\\conan_toolchain.cmake",  *cmake_args, "--fresh"], check=True, shell=True
-        # )
-        # subprocess.run(
-        #     ["cmake", "--build", "build", "--parallel", "8"], check=True, shell=True
-        # )
-
-        # subprocess.run(["cmake", "--preset", "ci-windows-ninja-wheels"])
-
+        subprocess.run(conan_install)
+        subprocess.run(cmake_configure)
 
 # The information here can also be placed in setup.cfg - better separation of
 # logic and declaration, and simpler if you include description/version in a file.
@@ -80,7 +76,7 @@ setup(
     author_email="https://github.com/anmayithap",
     description="Bindings for asio::serial_port",
     long_description="",
-    packages=find_packages(include=["core"]),  # Укажите только нужные пакеты
+    packages=find_packages(include=["pasio"]),  # Укажите только нужные пакеты
     ext_modules=[CMakeExtension("pasio")],
     cmdclass={"build_ext": CMakeBuild},
     zip_safe=False,

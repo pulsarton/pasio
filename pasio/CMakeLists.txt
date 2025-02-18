@@ -83,10 +83,6 @@ target_include_directories(
     PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include> $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/include>
            $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
 
-# ---- Export all symbols 
-
-set_target_properties(${PROJECT_NAME} PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS ON)
-
 # ---- Configure linker
 
 target_configure_linker(${PROJECT_NAME})
