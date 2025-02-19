@@ -1,3 +1,4 @@
+#include <asio/bind_executor.hpp>
 #include <asio/consign.hpp>
 #include <asio/dispatch.hpp>
 #include <asio/executor_work_guard.hpp>
@@ -35,15 +36,16 @@ asyncio.run(main())
         template<typename T> auto to_asyncio_future(auto& executor, std::future<T> future) -> py::object {
             const py::module_ asyncio = py::module_::import("asyncio");
             const py::object loop = asyncio.attr("get_running_loop")();
-            const py::object py_future = loop.attr("create_future")();
+            py::object py_future = loop.attr("create_future")();
+            // py_future.attr("set_result")(future.get());
 
             asio::dispatch(executor, [future = std::move(future), py_future]() mutable {
                 try {
                     T result = std::move(future).get();
-                    const py::gil_scoped_release gil;
+                    const py::gil_scoped_acquire gil;
                     py_future.attr("set_result")(std::move(result)); // py::none() for void
                 } catch (const std::exception& e) {
-                    const py::gil_scoped_release gil;
+                    const py::gil_scoped_acquire gil;
                     py_future.attr("set_exception")(py::value_error(e.what()));
                 }
             });
@@ -101,5 +103,29 @@ asyncio.run(main())
     async_serial_port::~async_serial_port() {
         m_io_context.stop();
         close();
+    }
+
+    callback_port::callback_port(const std::string& port, unsigned int baud_rate, private_constructor_t)
+        : m_serial(m_io_context, port) {
+        m_serial.set_option(asio::serial_port::baud_rate(baud_rate));
+    }
+
+    void callback_port::async_read(std::function<void(std::string)> callback) {
+        asio::async_read(m_serial, asio::buffer(m_buffer),
+                         [self = shared_from_this(), callback = std::move(callback)](auto, auto read) {
+                             callback(std::string{self->m_buffer.begin(), self->m_buffer.begin() + read});
+                         });
+    }
+
+    void callback_port::async_write(std::string data, std::function<void(int)> callback) {
+        asio::async_write(m_serial, asio::buffer(data),
+                          [self = shared_from_this(), callback = std::move(callback)](auto, auto written) {
+                              callback(static_cast<int>(written));
+                          });
+    }
+
+    callback_port::~callback_port() {
+        m_serial.close();
+        m_io_context.stop();
     }
 } // namespace pasio::async
