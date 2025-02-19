@@ -4,7 +4,7 @@
 #include <asio.hpp>
 #include <pasio/export/export.hpp>
 
-namespace pasio {
+namespace pasio::sync {
     class PASIO_EXPORT serial_port_wrapper {
     public:
         serial_port_wrapper(const serial_port_wrapper&) = delete;
@@ -23,6 +23,6 @@ namespace pasio {
         asio::io_service m_io;
         asio::serial_port m_serial;
     };
-} // namespace pasio
+} // namespace pasio::sync
 
 #endif
