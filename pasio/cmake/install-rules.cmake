@@ -25,14 +25,14 @@ set(_post_exclude [[.*/system32/.*\.dll]] [[^/lib.*]] [[^/usr/lib.*]])
 #     PRE_EXCLUDE_REGEXES [[api-ms-win-.*]]
 #                         [[ext-ms-.*]]
 #                         [[kernel32\.dll]]
-#                         [[python.*\.dll]] 
+#                         [[python.*\.dll]]
 #                         [[libc\.so\..*]]
 #                         [[libgcc_s\.so\..*]]
 #                         [[libm\.so\..*]]
 #                         [[libstdc\+\+\.so\..*]]
-#                         [[python.*\.so.*]] 
-#     POST_EXCLUDE_REGEXES [[.*/system32/.*\.dll]] 
-#                          [[^/lib.*]] 
+#                         [[python.*\.so.*]]
+#     POST_EXCLUDE_REGEXES [[.*/system32/.*\.dll]]
+#                          [[^/lib.*]]
 #                          [[^/usr/lib.*]]
 #     DIRECTORIES "${CONAN_RUNTIME_LIB_DIRS}"
 #     RUNTIME DESTINATION . COMPONENT ${PROJECT_NAME}_Wheel OPTIONAL EXCLUDE_FROM_ALL

@@ -76,7 +76,7 @@ target_sources(
 target_link_libraries(${PROJECT_NAME} PUBLIC asio::asio
                     PRIVATE $<BUILD_INTERFACE:${PROJECT_NAME}-pch> $<BUILD_INTERFACE:${PROJECT_NAME}-options>)
 
-# ---- Includes 
+# ---- Includes
 
 target_include_directories(
     ${PROJECT_NAME}

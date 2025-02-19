@@ -41,17 +41,17 @@ class CMakeBuild(build_ext):
             subprocess.check_output(["cmake", "--version"])
         except OSError:
             raise RuntimeError("CMake is not available.") from None
-        
+
         try:
             subprocess.check_output(["ninja", "--version"])
         except OSError:
             raise RuntimeError("Ninja is not available.") from None
-        
+
         try:
             subprocess.check_output(["conan", "--version"])
         except OSError:
             raise RuntimeError("Conan is not available.") from None
-        
+
         platfrom: str = self.plat_name
         print(f"platform is {platfrom}")
 

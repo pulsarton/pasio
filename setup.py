@@ -43,17 +43,17 @@ class CMakeBuild(build_ext):
             subprocess.check_output(["cmake", "--version"])
         except OSError:
             raise RuntimeError("CMake is not available.") from None
-        
+
         try:
             subprocess.check_output(["ninja", "--version"])
         except OSError:
             raise RuntimeError("Ninja is not available.") from None
-        
+
         try:
             subprocess.check_output(["conan", "--version"])
         except OSError:
             raise RuntimeError("Conan is not available.") from None
-        
+
         ext_fullpath = Path.cwd() / self.get_ext_fullpath(ext.name)
         extdir = ext_fullpath.parent.resolve()
 
