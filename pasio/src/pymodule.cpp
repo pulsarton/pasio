@@ -1,7 +1,9 @@
 #include <pybind11/pybind11.h>
 
+#include <string>
+
 #include <pasio/async/async_serial_port.hpp>
-#include <pasio/sync/sync_serial_port.hpp>
+#include <pasio/sync/sync_serial_port.hpp> // IWYU pragma: keep{}
 
 namespace py = pybind11;
 
