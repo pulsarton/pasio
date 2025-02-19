@@ -1,25 +1,28 @@
+# build dirs
 **build/
 conan/
 install/
 dist
 out
 pasio.egg-info
-
 cmake-build-*
 
+# python related things
 .mypy_cache
 .venv
 .python-version
 
+# do not populate package tests
 conan_test/build
 conan_test/CMakeUserPresets.json
+fetch_content_test/build
 
+# cache and user specific files
 CMakeUserPresets.json
 CMakeCache.cmake
 CMakeFiles
 
-fetch_content_test/build
-
+# ide caches
 .vs
 .idea
 .vscode/
@@ -56,3 +59,6 @@ fetch_content_test/build
 *.exe
 *.out
 *.app
+
+# clangd cache
+.cache
