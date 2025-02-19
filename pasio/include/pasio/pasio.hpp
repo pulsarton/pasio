@@ -2,9 +2,10 @@
 #define pasio_HPP
 
 #include <asio.hpp>
+#include <pasio/export/export.hpp>
 
 namespace pasio {
-    class serial_port_wrapper {
+    class PASIO_EXPORT serial_port_wrapper {
     public:
         serial_port_wrapper(const serial_port_wrapper&) = delete;
         serial_port_wrapper(serial_port_wrapper&&) = delete;
