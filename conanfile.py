@@ -67,7 +67,7 @@ class ProjectRecipe(ConanFile):
                 raise ValueError("Version not found in CMakeLists.txt")
 
     def requirements(self):
-        self.requires("boost/1.86.0")
+        self.requires("asio/1.32.0")
         self.requires("pybind11/2.13.6")
         self.test_requires("catch2/3.8.0")
 
