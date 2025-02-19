@@ -3,6 +3,8 @@
 #include <asio/dispatch.hpp>
 #include <asio/executor_work_guard.hpp>
 #include <asio/read.hpp>
+#include <asio/read_at.hpp>
+#include <asio/read_until.hpp>
 #include <asio/serial_port_base.hpp>
 #include <asio/steady_timer.hpp>
 #include <asio/use_future.hpp>
@@ -110,7 +112,8 @@ asyncio.run(main())
         m_serial.set_option(asio::serial_port::baud_rate(baud_rate));
     }
 
-    void callback_port::async_read(std::function<void(std::string)> callback) {
+    void callback_port::async_read(std::size_t bytes, std::function<void(std::string)> callback) {
+        m_buffer.resize(bytes);
         asio::async_read(m_serial, asio::buffer(m_buffer),
                          [self = shared_from_this(), callback = std::move(callback)](auto, auto read) {
                              callback(std::string{self->m_buffer.begin(), self->m_buffer.begin() + read});

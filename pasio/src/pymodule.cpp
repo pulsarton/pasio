@@ -27,6 +27,6 @@ PYBIND11_MODULE(pasio, async) {
 
     py::class_<pasio::async::callback_port, std::shared_ptr<pasio::async::callback_port>>(async, "CallbackSerialPort")
         .def(py::init(&pasio::async::callback_port::make_callback_port))
-        .def("async_read", &pasio::async::callback_port::async_read, "callback"_a)
+        .def("async_read", &pasio::async::callback_port::async_read, "bytes"_a, "callback"_a)
         .def("async_write", &pasio::async::callback_port::async_write, "data"_a, "callback"_a);
 }

@@ -5,6 +5,7 @@
 #include <asio/error_code.hpp>
 #include <asio/io_context.hpp>
 #include <asio/serial_port.hpp>
+#include <cstddef>
 #include <functional>
 #include <memory>
 #include <pybind11/pytypes.h>
@@ -55,7 +56,7 @@ namespace pasio::async {
             return std::make_shared<callback_port>(port, baud_rate, private_constructor_t{});
         }
 
-        void async_read(std::function<void(std::string)>);
+        void async_read(std::size_t bytes, std::function<void(std::string)>);
         void async_write(std::string data, std::function<void(int)>);
 
         ~callback_port();
