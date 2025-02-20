@@ -8,7 +8,7 @@ include(cmake/prelude.cmake)
 include(cmake/vsenvironment.cmake)
 
 # cmake-format: off
-project(pasio-core
+project(pasio
         VERSION 0.1.0
         DESCRIPTION "Short description"
         HOMEPAGE_URL "https://example.com/"
@@ -36,7 +36,6 @@ include(cmake/linker.cmake)
 include(cmake/ipo.cmake)
 include(cmake/coverage.cmake)
 include(cmake/sanitizers.cmake)
-
 
 if(${PROJECT_NAME}_ENABLE_CCACHE)
     enable_ccache()
