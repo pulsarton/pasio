@@ -3,10 +3,10 @@ include(GNUInstallDirs)
 
 install(
     TARGETS ${PROJECT_NAME}
-    RUNTIME_DEPENDENCY_SET ${PROJECT_NAME}_WheelDeps
-    RUNTIME DESTINATION . COMPONENT ${PROJECT_NAME}_Wheel
-    LIBRARY DESTINATION . COMPONENT ${PROJECT_NAME}_Wheel
-    ARCHIVE DESTINATION . COMPONENT ${PROJECT_NAME}_Wheel
+    RUNTIME_DEPENDENCY_SET WheelDeps
+    RUNTIME DESTINATION . COMPONENT Wheel
+    LIBRARY DESTINATION . COMPONENT Wheel
+    ARCHIVE DESTINATION . COMPONENT Wheel
     EXCLUDE_FROM_ALL)
 
 set(_pre_exclude
@@ -21,7 +21,7 @@ set(_pre_exclude
 set(_post_exclude [[.*/system32/.*\.dll]] [[^/lib.*]] [[^/usr/lib.*]])
 
 # install(
-#     RUNTIME_DEPENDENCY_SET ${PROJECT_NAME}_WheelDeps
+#     RUNTIME_DEPENDENCY_SET WheelDeps
 #     PRE_EXCLUDE_REGEXES [[api-ms-win-.*]]
 #                         [[ext-ms-.*]]
 #                         [[kernel32\.dll]]
@@ -35,8 +35,8 @@ set(_post_exclude [[.*/system32/.*\.dll]] [[^/lib.*]] [[^/usr/lib.*]])
 #                          [[^/lib.*]]
 #                          [[^/usr/lib.*]]
 #     DIRECTORIES "${CONAN_RUNTIME_LIB_DIRS}"
-#     RUNTIME DESTINATION . COMPONENT ${PROJECT_NAME}_Wheel OPTIONAL EXCLUDE_FROM_ALL
-#     LIBRARY DESTINATION . COMPONENT ${PROJECT_NAME}_Wheel OPTIONAL EXCLUDE_FROM_ALL)
+#     RUNTIME DESTINATION . COMPONENT Wheel OPTIONAL EXCLUDE_FROM_ALL
+#     LIBRARY DESTINATION . COMPONENT Wheel OPTIONAL EXCLUDE_FROM_ALL)
 
 # find_package(<package>) call for consumers to find this project
 set(package ${PROJECT_NAME})

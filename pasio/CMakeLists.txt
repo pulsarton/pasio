@@ -10,7 +10,7 @@ include(../cmake/static-analyzers.cmake)
 set(PARENT_PROJECT_NAME ${PROJECT_NAME})
 
 project(
-    pasio
+    pasiocppmodule
     VERSION ${CMAKE_PROJECT_VERSION_MAJOR}.${CMAKE_PROJECT_VERSION_MINOR}.${CMAKE_PROJECT_VERSION_PATCH}
     LANGUAGES CXX)
 
@@ -56,9 +56,14 @@ endif()
 pybind11_add_module(${PROJECT_NAME})
 add_library(${PARENT_PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 
+# ---- Change output name to pasio
+
+set_target_properties(${PROJECT_NAME} PROPERTIES OUTPUT_NAME pasio)
+
 # ---- Generate export header
 
-generate_export_header(${PROJECT_NAME} BASE_NAME pasio EXPORT_FILE_NAME ${PROJECT_BINARY_DIR}/include/pasio/export/export.hpp)
+generate_export_header(${PROJECT_NAME} BASE_NAME pasio EXPORT_FILE_NAME
+                       ${PROJECT_BINARY_DIR}/include/pasio/export/export.hpp)
 
 # ---- Set target sources
 
@@ -68,13 +73,21 @@ file(GLOB LIBRARY_SOURCES ${PROJECT_SOURCE_DIR}/src/*.cpp)
 target_sources(
     ${PROJECT_NAME}
     PUBLIC FILE_SET
-    ${PROJECT_NAME}_Headers TYPE HEADERS BASE_DIRS ${PROJECT_SOURCE_DIR}/include FILES ${LIBRARY_INCLUDES}
+           ${PROJECT_NAME}_Headers
+           TYPE
+           HEADERS
+           BASE_DIRS
+           ${PROJECT_SOURCE_DIR}/include
+           FILES
+           ${LIBRARY_INCLUDES}
     PRIVATE ${LIBRARY_SOURCES})
 
 # ---- Module dependencies
 
-target_link_libraries(${PROJECT_NAME} PUBLIC asio::asio
-                    PRIVATE $<BUILD_INTERFACE:${PROJECT_NAME}-pch> $<BUILD_INTERFACE:${PROJECT_NAME}-options>)
+target_link_libraries(
+    ${PROJECT_NAME}
+    PUBLIC asio::asio
+    PRIVATE $<BUILD_INTERFACE:${PROJECT_NAME}-pch> $<BUILD_INTERFACE:${PROJECT_NAME}-options>)
 
 # ---- Includes
 
@@ -130,10 +143,7 @@ endif()
 
 # ---- Build tests
 
-# include(CTest)
-# if(BUILD_TESTING AND ${PROJECT_NAME}_BUILD_TESTING)
-#     add_subdirectory(test)
-# endif()
+# include(CTest) if(BUILD_TESTING AND ${PROJECT_NAME}_BUILD_TESTING) add_subdirectory(test) endif()
 
 include(CTest)
 if(BUILD_TESTING AND ${PROJECT_NAME}_BUILD_PYTESTING)

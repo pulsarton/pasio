@@ -71,7 +71,7 @@ class CMakeBuild(build_ext):
         print(" ".join(cmake_configure))
         cmake_build = ["cmake", "--build", "--preset", f"{cmake_build}"]
         print(" ".join(cmake_build))
-        cmake_install = ["cmake", "--install",  f"build/{cmake_preset}", "--component pasio_Wheel", "--prefix", f"{extdir}"]
+        cmake_install = ["cmake", "--install",  f"build/{cmake_preset}", "--component Wheel", "--prefix", f"{extdir}"]
         print(" ".join(cmake_install))
 
         subprocess.run(conan_install)

@@ -19,10 +19,10 @@ class ProjectRecipe(ConanFile):
         "CMakeLists.txt",
         "dependencies.cmake",
         "options.cmake",
-        "core/include/*",
-        "core/src/*",
-        "core/cmake/*",
-        "core/CMakeLists.txt",
+        "pasio/include/*",
+        "pasio/src/*",
+        "pasio/cmake/*",
+        "pasio/CMakeLists.txt",
         "cmake/*",
     )
 
