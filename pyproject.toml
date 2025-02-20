@@ -2,7 +2,12 @@
 name = "pasio"
 version = "0.1.0"
 authors = [
-    {name="Ruslan Torbeev", email="r@gmail.com"}
+    { name = "Ruslan Torbeev", email = "ruslan.torbeev@yandex.ru" },
+    { name = "Vsevolod Chaplanov", email = "woornad@gmail.com" },
+]
+maintainers = [
+    { name = "Ruslan Torbeev", email = "ruslan.torbeev@yandex.ru" },
+    { name = "Vsevolod Chaplanov", email = "woornad@gmail.com" },
 ]
 description = "Add your description here"
 readme = "README.md"
@@ -16,14 +21,9 @@ dependencies = [
     "wheel>=0.45.1",
 ]
 
-[build-system]
-requires = [
-    "setuptools>=42",
-    "wheel",
-    "ninja",
-    "cmake>=3.28",
-]
-build-backend = "setuptools.build_meta"
+[tool.uv]
+package = true
+default-groups = ["dev", "test", "lint"]
 
 [tool.cibuildwheel]
 test-command = "pytest {project}/tests"
