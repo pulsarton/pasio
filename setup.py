@@ -14,6 +14,7 @@ from pathlib import Path
 from setuptools import Extension, setup
 from setuptools.command.build_ext import build_ext
 from setuptools import setup, find_packages
+import platform
 
 @dataclass
 class Preset:
@@ -22,9 +23,7 @@ class Preset:
     conan_profile: str
 
 PLAT_TO_CONAN = {
-    "win32": Preset("ci-windows32-ninja", "ci-windows32-ninja-release", "profiles//msvc-ninja-x32"),
-    "win-amd64": Preset("ci-windows-ninja", "ci-windows-ninja-release", "profiles//msvc-ninja-x64"),
-    "linux-x86_64": Preset("ci-ubuntu-release", "ci-ubuntu-release", "profiles/gcc-13-x64"),
+    "windows-amd64": Preset("ci-windows-ninja", "ci-windows-ninja-release", "profiles//msvc-ninja-x64"),
 }
 
 
@@ -57,7 +56,7 @@ class CMakeBuild(build_ext):
         ext_fullpath = Path.cwd() / self.get_ext_fullpath(ext.name)
         extdir = ext_fullpath.parent.resolve()
 
-        platfrom: str = self.plat_name
+        platfrom: str = platform.system().lower() + '-' + platform.machine().lower()
         print(f"platform is {platfrom}")
 
         build_pair = PLAT_TO_CONAN[platfrom]
