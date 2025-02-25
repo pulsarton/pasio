@@ -10,8 +10,10 @@
 #include <pybind11/functional.h>
 
 #include <pybind11/pytypes.h>
+#include <pyerrors.h>
 #include <string>
 
+#include <pasio/errors.hpp>
 #include <pasio/serial_port.hpp>
 
 namespace py = pybind11;
@@ -20,6 +22,9 @@ using py::literals::operator""_a;
 
 PYBIND11_MODULE(pasio, async) {
     async.doc() = "Python bindings to asio::serial_port";
+
+    /** SP - serial port */
+    py::register_exception<pasio::os_error>(async, "SPError", PyExc_OSError);
 
     py::class_<pasio::async::serial_port, std::shared_ptr<pasio::async::serial_port>>(async, "SerialPort")
         .def(py::init(&pasio::async::serial_port::make))
@@ -30,7 +35,7 @@ PYBIND11_MODULE(pasio, async) {
                :param data: data to write
                :type data: str
                )pbdoc")
-        .def("read", &pasio::async::serial_port::read, "butes"_a,
+        .def("read", &pasio::async::serial_port::read, "bytes"_a,
              R"pbdoc(
                Read data from serial port synchronously
 
@@ -39,7 +44,7 @@ PYBIND11_MODULE(pasio, async) {
                :rtype: str
                )pbdoc")
         .def("async_write", py::overload_cast<py::object, std::string>(&pasio::async::serial_port::async_write),
-             "executor"_a, "data"_a, 
+             "executor"_a, "data"_a,
              R"pbdoc(
                Writes data to serial port asynchronously on passed executor
 
@@ -48,7 +53,7 @@ PYBIND11_MODULE(pasio, async) {
                :type data: str
                )pbdoc")
         .def("async_read", py::overload_cast<py::object, std::size_t>(&pasio::async::serial_port::async_read),
-             "executor"_a, "bytes"_a, 
+             "executor"_a, "bytes"_a,
              R"pbdoc(
                Reads data from serial port asynchronously on passed executor
 
