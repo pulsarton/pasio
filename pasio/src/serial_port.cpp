@@ -1,20 +1,9 @@
-#include <asio/bind_executor.hpp>
-#include <asio/consign.hpp>
-#include <asio/dispatch.hpp>
-#include <asio/executor_work_guard.hpp>
 #include <asio/read.hpp>
-#include <asio/read_at.hpp>
-#include <asio/read_until.hpp>
 #include <asio/serial_port.hpp>
-#include <asio/serial_port_base.hpp>
-#include <asio/steady_timer.hpp>
-#include <asio/use_future.hpp>
 #include <asio/write.hpp>
-#include <cstddef>
 #include <pasio/serial_port.hpp>
 #include <pybind11/cast.h>
 #include <pybind11/gil.h>
-#include <pybind11/pybind11.h>
 #include <pybind11/pytypes.h>
 #include <pybind11/stl_bind.h>
 #include <string>
@@ -92,10 +81,52 @@ namespace pasio::async {
         m_serial.set_option(asio::serial_port::baud_rate{value});
     }
 
-    template<> [[nodiscard]] auto serial_port::get_option<asio::serial_port::baud_rate>() const {
-        asio::serial_port::baud_rate result;
-        m_serial.get_option(result);
-        return result;
+    template<> void serial_port::set_option<asio::serial_port::character_size>(unsigned int value) {
+        m_serial.set_option(asio::serial_port::character_size{value});
     }
 
+    template<>
+    void serial_port::set_option<asio::serial_port::flow_control>(asio::serial_port::flow_control::type value) {
+        m_serial.set_option(asio::serial_port::flow_control{value});
+    }
+
+    template<> void serial_port::set_option<asio::serial_port::stop_bits>(asio::serial_port::stop_bits::type bits) {
+        m_serial.set_option(asio::serial_port::stop_bits{bits});
+    }
+
+    template<> void serial_port::set_option<asio::serial_port::parity>(asio::serial_port::parity::type parity) {
+        m_serial.set_option(asio::serial_port::parity{parity});
+    }
+
+    template<> [[nodiscard]] auto serial_port::get_option<asio::serial_port::baud_rate>() const -> unsigned int {
+        asio::serial_port::baud_rate result;
+        m_serial.get_option(result);
+        return result.value();
+    }
+
+    template<> auto serial_port::get_option<asio::serial_port::character_size>() const -> unsigned int {
+        asio::serial_port::character_size result;
+        m_serial.get_option(result);
+        return result.value();
+    }
+
+    template<>
+    auto serial_port::get_option<asio::serial_port::flow_control>() const -> asio::serial_port::flow_control::type {
+        asio::serial_port::flow_control result;
+        m_serial.get_option(result);
+        return result.value();
+    }
+
+    template<>
+    auto serial_port::get_option<asio::serial_port::stop_bits>() const -> asio::serial_port::stop_bits::type {
+        asio::serial_port::stop_bits result;
+        m_serial.get_option(result);
+        return result.value();
+    }
+
+    template<> auto serial_port::get_option<asio::serial_port::parity>() const -> asio::serial_port::parity::type {
+        asio::serial_port::parity result;
+        m_serial.get_option(result);
+        return result.value();
+    }
 } // namespace pasio::async
