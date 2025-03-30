@@ -152,12 +152,6 @@ if(${PROJECT_NAME}_BUILD_DOCS)
     wrap_doxygen_add_docs(${PROJECT_NAME} SOURCE_DIRS "${ALL_SOURCE_FILES}" OUTPUT "doxygen")
 endif()
 
-# ---- Build examples
-
-if(${PROJECT_NAME}_BUILD_EXAMPLES)
-    add_subdirectory(example)
-endif()
-
 # ---- Build tests
 
 # include(CTest) if(BUILD_TESTING AND ${PROJECT_NAME}_BUILD_TESTING) add_subdirectory(test) endif()
