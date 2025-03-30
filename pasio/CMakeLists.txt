@@ -47,8 +47,25 @@ target_sanitizers(
 
 add_library(${PROJECT_NAME}-pch INTERFACE) # declare library if pch is off prevent install rule error for unknown target
 if(${PROJECT_NAME}_ENABLE_PCH)
-    target_precompile_headers(${PROJECT_NAME}-pch INTERFACE <string> <vector>)
-    target_link_libraries(${PROJECT_NAME}-pch INTERFACE $<BUILD_INTERFACE:${PROJECT_NAME}-options>)
+    target_precompile_headers(
+        ${PROJECT_NAME}-pch
+        INTERFACE
+        <string>
+        <memory>
+        <vector>
+        <pybind11/pybind11.h>
+        <pybind11/pytypes.h>
+        <pybind11/functional.h>
+        <pybind11/pytypes.h>
+        <pybind11/cast.h>
+        <pybind11/gil.h>
+        <pybind11/stl_bind.h>
+        <asio/io_context.hpp>
+        <asio/serial_port.hpp>
+        <asio/read.hpp>
+        <asio/write.hpp>)
+    target_link_libraries(${PROJECT_NAME}-pch INTERFACE $<BUILD_INTERFACE:${PROJECT_NAME}-options> pybind11::headers
+                                                        asio::asio)
 endif()
 
 # ---- Declare library ----
@@ -133,12 +150,6 @@ endif()
 if(${PROJECT_NAME}_BUILD_DOCS)
     include(../cmake/docs.cmake)
     wrap_doxygen_add_docs(${PROJECT_NAME} SOURCE_DIRS "${ALL_SOURCE_FILES}" OUTPUT "doxygen")
-endif()
-
-# ---- Build examples
-
-if(${PROJECT_NAME}_BUILD_EXAMPLES)
-    add_subdirectory(example)
 endif()
 
 # ---- Build tests

@@ -35,9 +35,9 @@ namespace pasio::async {
 
         void close();
 
-        template<typename Option, typename Value> void set_option(Value value);
+        template<typename Option, typename Value> void set_option(Value);
 
-        template<typename Option> auto get_option() const;
+        template<typename Option, typename R> auto get_option() const -> R;
 
         ~serial_port();
 
@@ -51,17 +51,25 @@ namespace pasio::async {
 
     template<> void serial_port::set_option<asio::serial_port::baud_rate>(unsigned int value);
 
-    template<> [[nodiscard]] auto serial_port::get_option<asio::serial_port::baud_rate>() const;
+    template<> void serial_port::set_option<asio::serial_port::character_size>(unsigned int value);
 
-    /*
+    template<>
+    void serial_port::set_option<asio::serial_port::flow_control>(asio::serial_port::flow_control::type value);
 
-        not implemented
+    template<> void serial_port::set_option<asio::serial_port::stop_bits>(asio::serial_port::stop_bits::type bits);
 
-        template<> void serial_port::set_option<asio::serial_port::flow_control>(int value);
-        template<> void serial_port::set_option<asio::serial_port::character_size>(int value);
-        template<> void serial_port::set_option<asio::serial_port::stop_bits>(int value);
-        template<> void serial_port::set_option<asio::serial_port::parity>(int value);
-    */
+    template<> void serial_port::set_option<asio::serial_port::parity>(asio::serial_port::parity::type parity);
+
+    template<> auto serial_port::get_option<asio::serial_port::baud_rate>() const -> unsigned int;
+
+    template<> auto serial_port::get_option<asio::serial_port::character_size>() const -> unsigned int;
+
+    template<>
+    auto serial_port::get_option<asio::serial_port::flow_control>() const -> asio::serial_port::flow_control::type;
+
+    template<> auto serial_port::get_option<asio::serial_port::stop_bits>() const -> asio::serial_port::stop_bits::type;
+
+    template<> auto serial_port::get_option<asio::serial_port::parity>() const -> asio::serial_port::parity::type;
 } // namespace pasio::async
 
 #endif // PASIO_ASYNC_serial_port_HPP
