@@ -1,12 +1,21 @@
 #include <asio/read.hpp>
 #include <asio/serial_port.hpp>
+#include <asio/serial_port_base.hpp>
+#include <asio/steady_timer.hpp>
+#include <asio/system_error.hpp>
+#include <asio/use_future.hpp>
 #include <asio/write.hpp>
+#include <pasio/errors.hpp>
 #include <pasio/serial_port.hpp>
 #include <pybind11/cast.h>
+#include <pybind11/detail/common.h>
 #include <pybind11/gil.h>
 #include <pybind11/pytypes.h>
 #include <pybind11/stl_bind.h>
+#include <pyerrors.h>
 #include <string>
+#include <system_error>
+#include <utility>
 
 namespace pasio::async {
 
@@ -16,7 +25,13 @@ namespace pasio::async {
     }
 
     auto serial_port::make(const std::string& port, unsigned int baud_rate) -> std::shared_ptr<serial_port> {
-        return std::make_shared<serial_port>(port, baud_rate, private_constructor);
+        // There is an unclear utf-8 conversion error for the user if the port could not be opened.
+        try {
+            return std::make_shared<serial_port>(port, baud_rate, private_constructor);
+        } catch (const asio::system_error& error) {
+            // convert to human readable error message for lib user
+            throw os_error{error.code()};
+        }
     }
 
     auto serial_port::async_read(py::object executor, std::size_t bytes) -> py::object {
