@@ -7,10 +7,15 @@ endif()
 include(cmake/prelude.cmake)
 include(cmake/vsenvironment.cmake)
 include(cmake/conan_provider.cmake)
+include(cmake/utils.cmake)
+
+pasio_get_version(PASIO_VERSION TOML_FILE "pyproject.toml")
+
+message(STATUS "Version: ${PASIO_VERSION}")
 
 # cmake-format: off
 project(pasio
-        VERSION 0.1.0
+        VERSION ${PASIO_VERSION}
         DESCRIPTION "Short description"
         HOMEPAGE_URL "https://example.com/"
         LANGUAGES CXX)
