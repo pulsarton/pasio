@@ -6,6 +6,7 @@ endif()
 
 include(cmake/prelude.cmake)
 include(cmake/vsenvironment.cmake)
+include(cmake/conan_provider.cmake)
 
 # cmake-format: off
 project(pasio
