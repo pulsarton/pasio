@@ -6,6 +6,7 @@ endif()
 
 include(cmake/prelude.cmake)
 include(cmake/vsenvironment.cmake)
+include(cmake/conan_provider.cmake)
 include(cmake/utils.cmake)
 
 pasio_get_version(PASIO_VERSION TOML_FILE "pyproject.toml")
