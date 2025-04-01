@@ -1,5 +1,6 @@
 import os
 import re
+import toml
 
 from conan import ConanFile
 from conan.tools.cmake import CMake, CMakeDeps, CMakeToolchain, cmake_layout
@@ -40,32 +41,23 @@ class ProjectRecipe(ConanFile):
         ]
 
         return project_components
+    
+    def _get_pyproject_data(self):
+        try:
+            pyproject_path = os.path.join(self.recipe_folder, "pyproject.toml")
+            with open(pyproject_path, "r", encoding="utf-8") as f:
+                return toml.load(f)
+        except FileNotFoundError as error:
+            print(f"Failed to load pyproject.toml content with error: {error}")
 
     def set_name(self):
-        cmakelists_path = os.path.join(self.recipe_folder, "CMakeLists.txt")
-        with open(cmakelists_path, "r") as f:
-            cmake_content = f.read()
-
-            # Extract version from `project()` statement
-            match = re.search(r"project\(\s*([\w\-]+)", cmake_content)
-            if match:
-                self.name = match.group(1)
-                print(self.name)
-            else:
-                raise ValueError("`NAME` not found in CMakeLists.txt")
+        pyproject_content = self._get_pyproject_data()
+        self.name = pyproject_content["project"]["name"]
 
     def set_version(self):
-        cmakelists_path = os.path.join(self.recipe_folder, "CMakeLists.txt")
-        with open(cmakelists_path, "r") as f:
-            cmake_content = f.read()
-
-            # Extract version from `project()` statement
-            match = re.search(r"VERSION\s+(\d+\.\d+\.\d+)\s*", cmake_content)
-            if match:
-                self.version = match.group(1)
-            else:
-                raise ValueError("Version not found in CMakeLists.txt")
-
+        pyproject_content = self._get_pyproject_data()
+        self.name = pyproject_content["project"]["version"]
+            
     def requirements(self):
         self.requires("asio/1.32.0")
         self.requires("pybind11/2.13.6")
